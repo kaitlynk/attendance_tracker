@@ -36,7 +36,8 @@ function addNewSection() {
 		var problem = $("#happening-now-problem").val();
 		var student = $("#student_id").text();
 		var instructor = $("#instructor_id").text();
-		var registration = {p_cat: category, p_desc: problem, s_netid: student, i_netid: instructor};
+		var start_time = $("#start_time").text();
+		var registration = {p_cat: category, p_desc: problem, s_netid: student, i_netid: instructor, start_time: start_time};
 		$.ajax({
 			url: 'ajax/student_add.php',
 			data: registration,
@@ -45,7 +46,7 @@ function addNewSection() {
 				var number = result.split("|")[0];
 				var time = result.split("|")[1];
 				$(".happening-now-list-section").last().removeClass("no-bottom-border");
-				$("#happening-now-list").append('<div class = "happening-now-list-section no-bottom-border center">\
+				$("#happening-now-list").append('<div class = "happening-now-list-section no-bottom-border center no-height">\
 					<span class = "happening-now-number hidden">'+number+'</span>\
 					<div class = "happening-now-list-section-text left font-size-14 border-box">\
 						<span class = "timestamp orange">['+time+']</span> \
@@ -56,6 +57,12 @@ function addNewSection() {
 					</div>\
 					<img src = "img/delete_icon.png" class = "happening-now-list-delete red clickable" />\
 				</div>');
+
+				var height = $(".happening-now-list-section").height();
+
+				$(".happening-now-list-section").last().animate({
+					height: height
+				});
 			}
 		});
 		

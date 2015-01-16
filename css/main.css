@@ -30,6 +30,10 @@ html, body {
 	display: none;
 }
 
+.no-height {
+	height: 0px;
+}
+
 .login-input {
 	margin-right: 0px;
 	display: block;

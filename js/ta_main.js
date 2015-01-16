@@ -7,8 +7,19 @@ $(document).ready(function() {
 	});
 
 	$(document).on("click", ".happening-now-list-finish", function() {
+		var att_id = $(this).siblings('.happening-now-number').text();
+		$.ajax({
+			url: 'ajax/ta_finish.php',
+			data: {att_id: att_id},
+			type: 'POST'
+		});
+
 		$(this).siblings().hide();
 		$(this).parent().slideToggle();
 		$(this).remove();
+
+		if (!$(".happening-now-list-section").last().hasClass("no-bottom-border")) {
+			$(".happening-now-list-section").last().addClass("no-bottom-border");
+		}
 	});
 });

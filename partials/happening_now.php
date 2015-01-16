@@ -3,7 +3,25 @@
 	$page = split('_',$url[count($url) - 1]);
 	$page_type = $page[0];
 
-	$sql = 'SELECT * FROM AttendingOH ORDER BY registration_time';
+	function change_to_time($prevtime, $hasSecs) {
+		$time = strtotime($prevtime);
+		if ($hasSecs)
+			$timestamp = date("g:i:s A", $time);
+		else
+			$timestamp = date("g:i A", $time);
+		return $timestamp;
+	}
+
+	function change_back_time($prevtime) {
+		$timestamp = date("Y-m-d H:i:s", $prevtime);
+		return $timestamp;
+	}
+
+	$curr_instructors_sql = 'SELECT * FROM AttendingOH INNER JOIN Instructors INNER JOIN OH WHERE AttendingOH.i_netid = Instructors.netid AND AttendingOH.time = OH.start_time GROUP BY Instructors.netid';
+	$curr_instructors_result = $mysqli->query($curr_instructors_sql);
+	$first_instructor = mysqli_fetch_assoc($curr_instructors_result);
+
+	$sql = 'SELECT * FROM AttendingOH INNER JOIN Instructors INNER JOIN OH WHERE AttendingOH.i_netid = Instructors.netid AND AttendingOH.time = OH.start_time ORDER BY registration_time ASC';
 	$result = $mysqli->query($sql);
 ?>
 
@@ -16,16 +34,17 @@
 			<div class = "medium-arrow-left"></div>
 		</span>
 		<div id = "happening-now-time" class = "font-size-15 float-left">
-			<span id = "instructor_id" class = "hidden"><?php echo "mat297"; ?></span>
+			<span id = "instructor_id" class = "hidden"><?php echo $first_instructor['i_netid']; ?></span>
+			<span id = "start_time" class = "hidden"><?php echo $first_instructor['time'];?></span>
 			<ul class = "list-style-none left float-left light-blue">
 				<li>TA</li>
 				<li>Room</li>
 				<li>Time</li>
 			</ul>
 			<ul class = "list-style-none left float-left" id = "happening-now-details">
-				<li>Matt Tomlinson</li>
-				<li>Gates G11</li>
-				<li>5:00 - 11:00 PM</li>
+				<li><?php echo  $first_instructor['first_name']." ".$first_instructor['last_name']; ?></li>
+				<li><?php echo  $first_instructor['location']; ?></li>
+				<li><?php echo change_to_time($first_instructor['start_time'], false)." - ".change_to_time($first_instructor['end_time'], false) ?></li>
 			</ul>
 		</div>
 		<span class = "arrow" id = "happening-now-right-arrow">
@@ -36,15 +55,13 @@
 		<?php 
 			if (mysqli_num_rows($result) > 0) {
 			    while($row = mysqli_fetch_assoc($result)) {
-			    	$time = strtotime($row['registration_time']);
-			    	$timestamp = date("h:i:s A", $time); 
 			        echo "<div class = 'happening-now-list-section center'>
 			       		<span class = 'happening-now-number hidden'>".$row['att_id']."</span>
 						<div class = 'happening-now-list-section-text left font-size-14 border-box'>
 							<span class = 'timestamp orange'>[";
 					
 					if (strcasecmp($page_type, "ta") == 0) echo strtoupper($row['s_netid']);
-					else echo $timestamp;
+					else echo change_to_time($row['registration_time'], true);
 
 					echo "]</span> 
 							<span class = 'category'>".strtoupper($row['p_cat'])."</span>: 
