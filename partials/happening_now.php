@@ -1,6 +1,10 @@
 <?php
 	$url = split('/', $_SERVER['REQUEST_URI']);
-	$page_type = split('_',$url[count($url) - 1])[0];
+	$page = split('_',$url[count($url) - 1]);
+	$page_type = $page[0];
+
+	$sql = 'SELECT * FROM AttendingOH ORDER BY registration_time';
+	$result = $mysqli->query($sql);
 ?>
 
 <div id = "happening-now-header" class = "font-size-18 center">
@@ -28,56 +32,30 @@
 		</span>
 	</div>
 	<div id = "happening-now-list" class = "box center">
-		<div class = "happening-now-list-section center">
-			<div class = "happening-now-list-section-text left font-size-14 border-box">
-				<span class = "timestamp orange">[Timestamp]</span> 
-				<span class = "category">SQL</span>: 
-				<span class = "problem">
-					Table not adding
-				</span>
-			</div>
-		</div>
-		<div class = "happening-now-list-section center">
-			<div class = "happening-now-list-section-text left font-size-14 border-box">
-				<span class = "timestamp orange">[Timestamp]</span> 
-				<span class = "category">CSS</span>: 
-				<span class = "problem">
-					Background wrong image
-				</span>
-			</div>
-		</div>
-		<div class = "happening-now-list-section center">
-			<div class = "happening-now-list-section-text left font-size-14 border-box">
-				<span class = "timestamp orange">[Timestamp]</span> 
-				<span class = "category">JS</span>: 
-				<span class = "problem">
-					Form not submitting properly
-				</span>
-			</div>
-			<?php
-				if (strcasecmp($page_type, "student") == 0) {
-					echo '<img src = "img/delete_icon.png" class = "happening-now-list-delete clickable" />';
-				}
-			?>
-		</div>
-		<div class = "happening-now-list-section center">
-			<div class = "happening-now-list-section-text left font-size-14 border-box">
-				<span class = "timestamp orange">[Timestamp]</span> 
-				<span class = "category">JS</span>: 
-				<span class = "problem">
-					AJAX not signaling ready
-				</span>
-			</div>
-		</div>
-		<div class = "happening-now-list-section no-bottom-border center">
-			<div class = "happening-now-list-section-text left font-size-14 border-box">
-				<span class = "timestamp orange">[Timestamp]</span> 
-				<span class = "category">General</span>: 
-				<span class = "problem">
-					Don't understand how to use JQuery with PHP
-				</span>
-			</div>
-		</div>
+		<?php 
+			if (mysqli_num_rows($result) > 0) {
+			    while($row = mysqli_fetch_assoc($result)) {
+			    	$time = strtotime($row['registration_time']);
+			    	$timestamp = date("h:i:s A", $time); 
+			        echo "<div class = 'happening-now-list-section center'>
+			       		<span class = 'happening-now-number hidden'>".$row['att_id']."</span>
+						<div class = 'happening-now-list-section-text left font-size-14 border-box'>
+							<span class = 'timestamp orange'>[".$timestamp."]</span> 
+							<span class = 'category'>".strtoupper($row['p_cat'])."</span>: 
+							<span class = 'problem'>
+								".$row['p_desc']."
+							</span>
+						</div>";
+					if (strcasecmp($page_type, "student") == 0 && strcasecmp('jh2224', $row['s_netid']) == 0) {
+						echo '<img src = "img/delete_icon.png" class = "happening-now-list-delete clickable" />';
+					}
+					echo "</div>";
+			    }
+
+			} else {
+			    echo "There are currently no registrations!";
+			}
+		?>
 	</div>
 	<?php 
 		if (strcasecmp($page_type, "ta") == 0) {

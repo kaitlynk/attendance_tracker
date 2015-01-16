@@ -26,6 +26,10 @@ html, body {
 	font-weight: 200;
 }
 
+.hidden {
+	display: none;
+}
+
 .login-input {
 	margin-right: 0px;
 	display: block;

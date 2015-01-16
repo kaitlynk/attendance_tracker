@@ -1,11 +1,9 @@
 <?php
-	error_reporting(E_ERROR | E_PARSE);
-
 	include 'require/password.php';
     $mysqli = new mysqli($host,$login,$password,$databaseName);
-    
+
     if (mysqli_connect_error() ){
-        //die("Can't connect to database: " . $mysqli->error);
+        die("Can't connect to database: " . $mysqli->error);
     }
 ?>
 
