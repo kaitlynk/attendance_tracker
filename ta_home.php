@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-	
+
 	<?php 
 		include 'require/header.php';
-		include 'require/student_header.php'; 
+		include 'require/ta_header.php'; 
 	?>
-
+	
 		<div id = "container">
 			<div id = "left-column" class = "column">
 				<?php include 'partials/happening_now.php'; ?>

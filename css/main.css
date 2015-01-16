@@ -116,6 +116,14 @@ html, body {
 	float: right;
 }
 
+.horizontal-line {
+	margin-left: auto;
+	margin-right: auto;
+	width: 95%;
+	height: 1px;
+	background-color: #BFBFBF;
+}
+
 input:focus{
 	outline: 0;
 }
@@ -219,7 +227,7 @@ textarea {
 }
 
 .column {
-	padding: 15px;
+	padding: 10px;
 }
 
 #left-column {
@@ -242,11 +250,12 @@ textarea {
 }
 
 #happening-now-info {
-	position: absolute;
-	top: 35px;
+	position: relative;
+	display: inline-block;
+	/*top: 35px;
 	bottom: 25px;
 	left: 25px;
-	right: 25px;
+	right: 25px;*/
 	font-weight: lighter;
 }
 
@@ -274,7 +283,7 @@ textarea {
 
 #happening-now-list {
 	width: 90%;
-	height: 60%;
+	height: 250px;
 	overflow-y: scroll;
 	overflow-x: hidden;
 	margin-bottom: 20px;
@@ -286,6 +295,8 @@ textarea {
 	border-bottom: 1px solid #E3E3E3;
 	width: 95%;
 	position: relative;
+	overflow-y: scroll;
+	overflow-x: display;
 }
 
 .happening-now-list-section-text {
@@ -352,13 +363,15 @@ select#happening-now-category {
 	right: 0px;
 }
 
+#next-oh-header {
+	padding-top: 15px;
+}
 
 
 
 
 
 #calendar {
-
     border-left: 1px black solid;
     overflow: hidden;
 }
