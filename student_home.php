@@ -1,10 +1,19 @@
 <!DOCTYPE html>
 
+<?php
+include 'require/password.php';
+    $mysqli = new mysqli($host,$login,$password,$databaseName);
+    
+    if (mysqli_connect_error() ){
+        die("Can't connect to database: " . $mysqli->error);
+    }
+?>
 <html>
 	<head>
 		<title>Office Hours Tracker</title>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" type="text/css" href="css/main.css">
+		
 	</head>
 
 	<body>
@@ -16,7 +25,7 @@
 				</div>
 				<div id = "happening-now-info" class = "center">
 					<div id = "happening-now-details" class = "center">
-						<span class = "happening-now-arrow" id = "happening-now-left-arrow">
+						<span class = "arrow" id = "happening-now-left-arrow">
 							<div class = "medium-arrow-left"></div>
 						</span>
 						<div id = "happening-now-time" class = "font-size-15">
@@ -31,7 +40,7 @@
 								<li>5:00 - 11:00 PM</li>
 							</ul>
 						</div>
-						<span class = "happening-now-arrow" id = "happening-now-right-arrow">
+						<span class = "arrow" id = "happening-now-right-arrow">
 							<div class = "medium-arrow-right"></div>
 						</span>
 					</div>
@@ -105,7 +114,7 @@
 					All Office Hours
 				</div>
 				<div id = "all-oh-toggle" class = "left">
-					<span id = "all-oh-"
+					<span id = "all-oh-">List | Calendar</span>
 				</div>
 				<?php include 'require/calendar.php'; ?>
 			</div>

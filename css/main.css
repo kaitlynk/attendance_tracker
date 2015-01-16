@@ -238,6 +238,7 @@ textarea {
 	top: 0px;
 	bottom: 25px;
 	padding-left: 35px;
+	font-family: 'Open Sans', sans-serif;
 }
 
 #happening-now-info {
@@ -254,7 +255,7 @@ textarea {
 	padding: 5px;
 }
 
-.happening-now-arrow {
+.arrow {
 	display: table-cell;
 	vertical-align: middle;
 	cursor: pointer;	
@@ -353,3 +354,74 @@ select#happening-now-category {
 
 
 
+
+
+
+#calendar {
+
+    border-left: 1px black solid;
+    overflow: hidden;
+}
+
+#month {
+    border-top: 1px black solid;
+    border-right: 1px black solid;
+    border-bottom: 1px black solid;
+    width: 98%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    color: white;
+    background-color: #383838;
+    font-size: 30px;
+    padding: 5px 0px 5px 0px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+#month-center {
+	display: table;
+	font-weight: lighter;
+	margin: 0 auto;
+}
+
+#month-left {
+	margin-left: 5%;
+	width: 90%;
+	float: left;
+}
+
+#month-right {
+	float: right;
+	display: inline-block;
+	padding-right: 2%;
+	cursor: pointer;
+}
+
+.curr-day {
+    color: #E68D00;
+}
+
+.day {
+    height: 80px;
+    width: 14%;
+    float: left;
+    border-right: 1px black solid;
+    border-bottom: 1px black solid;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    padding: 0px 6px 0px 4px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    font-size: 18px;
+    text-align: right;
+}
+
+.oh {
+    height: 15px;
+    font-size: 14px;
+    font-weight: lighter;
+    text-align: left;
+    color: black;
+}

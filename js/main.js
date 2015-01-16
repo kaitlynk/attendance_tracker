@@ -5,6 +5,11 @@ $(document).ready(function() {
 			$(".happening-now-list-section").last().addClass("no-bottom-border");
 		}
 	});
+	
+	$(".oh").click(function() {
+		var arr = $(this).attr('id').split('/');
+		alert(arr[0] + "\nRoom: " + arr[4] + "\nDate: " + $("#month").text() + " " + arr[1] + "\nStart: " + arr[2] + "\nEnd: " + arr[3]);
+	});
 });
 
 
@@ -29,4 +34,8 @@ function addNewSection() {
 			<img src = "img/delete_icon.png" class = "happening-now-list-delete red clickable" />\
 		</div>');
 	}
+}
+
+function dispOH(first_name,last_name,day,s_time,e_time,location) {
+        $("#" + day).append("<div id='" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "' class='oh'>" + first_name + "</div>");
 }
