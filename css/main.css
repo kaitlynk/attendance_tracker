@@ -22,6 +22,10 @@ html, body {
 	font-size: 15px;
 }
 
+.thin {
+	font-weight: 200;
+}
+
 .login-input {
 	margin-right: 0px;
 	display: block;
@@ -249,17 +253,14 @@ textarea {
 	font-family: 'Open Sans', sans-serif;
 }
 
-#happening-now-info {
+#happening-now-info, #next-oh-info {
 	position: relative;
 	display: inline-block;
-	/*top: 35px;
-	bottom: 25px;
-	left: 25px;
-	right: 25px;*/
+	width: 100%;
 	font-weight: lighter;
 }
 
-#happening-now-details {
+#happening-now-details, #next-oh-details {
 	display: table;
 	padding: 5px;
 }
@@ -271,12 +272,12 @@ textarea {
 	padding: 0px 15px;
 }
 
-#happening-now-time {
+#happening-now-time, #next-oh-time {
 	display: table-cell;
 	vertical-align: middle;
 }
 
-#happening-now-time ul {
+#happening-now-time ul, #next-oh-time ul {
 	margin: 10px;
 	padding: 0px;
 }
@@ -318,6 +319,12 @@ textarea {
 
 .happening-now-list-delete:hover {
 	opacity: 1;
+}
+
+.happening-now-list-finish {
+	height: 20px;
+	position: absolute;
+	right: 0px;
 }
 
 .no-bottom-border {
@@ -367,8 +374,24 @@ select#happening-now-category {
 	padding-top: 15px;
 }
 
+#next-oh-icons {
+	margin: 10px;
+	display: table-cell;
+	vertical-align: middle;
+}
 
+.next-oh-icon {
+	height: 28px;
+	opacity: .7;
+}
 
+.next-oh-icon:hover {
+	opacity: 1;
+}
+
+#next-oh-wrapper {
+	display: inline-table;
+}
 
 
 #calendar {
