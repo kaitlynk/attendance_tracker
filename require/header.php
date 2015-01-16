@@ -1,9 +1,18 @@
-<?php
+<?php session_start();
 	include 'require/password.php';
     $mysqli = new mysqli($host,$login,$password,$databaseName);
 
     if (mysqli_connect_error() ){
         die("Can't connect to database: " . $mysqli->error);
+    }
+
+    class Person {
+    	public $userid;
+    	public $username;
+    	public $netid;
+    	public $firstName;
+    	public $lastName;
+    	public $groups;
     }
 ?>
 

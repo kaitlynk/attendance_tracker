@@ -6,7 +6,9 @@
 	    die("Connection failed: " . $mysqli->connect_error);
 	}
 
-	$sql = "INSERT INTO AttendingOH (p_cat,p_desc,s_netid,i_netid) VALUES ('".$_POST['p_cat']."', '".$_POST['p_desc']."', '".$_POST['s_netid']."', '".$_POST['i_netid']."');";
+	$sql = "INSERT INTO AttendingOH (p_cat,p_desc,s_netid,i_netid) VALUES ('".mysql_real_escape_string($_POST['p_cat'])."', '".mysql_real_escape_string($_POST['p_desc']).
+		"', '".mysql_real_escape_string($_POST['s_netid'])."', '".mysql_real_escape_string($_POST['i_netid'])."');";
+	echo $sql;
 	$result = $mysqli->query($sql); 
 
 	$sql = "SELECT att_id, registration_time from AttendingOH ORDER BY att_id DESC LIMIT 1";

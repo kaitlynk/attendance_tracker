@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
 	$(document).on("click", ".happening-now-list-delete", function() {
 		var att_id = $(this).siblings('.happening-now-number').text();
 		$.ajax({
@@ -33,7 +34,9 @@ function addNewSection() {
 	} else {
 		if (category == "JavaScript") category = "JS";
 		var problem = $("#happening-now-problem").val();
-		var registration = {p_cat: category, p_desc: problem, s_netid: 'jh2224', i_netid: 'mat297'};
+		var student = $("#student_id").text();
+		var instructor = $("#instructor_id").text();
+		var registration = {p_cat: category, p_desc: problem, s_netid: student, i_netid: instructor};
 		$.ajax({
 			url: 'ajax/student_add.php',
 			data: registration,
