@@ -16,7 +16,9 @@
 				<div id = "all-oh-toggle" class = "left thin">
 					<span id = "all-oh">List | Calendar</span>
 				</div>
-				<?php include 'partials/calendar.php'; ?>
+				<div id = "calendar">
+					<?php include 'partials/calendar.php'; ?>
+				</div>
 			</div>
 		</div>
 	</body>
