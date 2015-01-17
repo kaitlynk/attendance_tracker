@@ -13,8 +13,8 @@
 				<div id = "all-oh-header" class = "font-size-18 left">
 					All Office Hours
 				</div>
-				<div id = "all-oh-toggle" class = "left">
-					<span id = "all-oh-">List | Calendar</span>
+				<div id = "all-oh-toggle" class = "left thin">
+					<span id = "all-oh">List | Calendar</span>
 				</div>
 				<?php include 'partials/calendar.php'; ?>
 			</div>

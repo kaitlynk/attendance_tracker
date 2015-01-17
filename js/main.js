@@ -17,6 +17,10 @@ $(document).ready(function() {
 		
 	});
 
+	$("#happening-now-right-arrow").click(function() {
+
+	});
+
 	$(".oh").click(function() {
 		var arr = $(this).attr('id').split('/');
 		alert(arr[0] + "\nRoom: " + arr[4] + "\nDate: " + $("#month").text() + " " + arr[1] + "\nStart: " + arr[2] + "\nEnd: " + arr[3]);

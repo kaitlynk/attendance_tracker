@@ -3,6 +3,11 @@
 	$page = split('_',$url[count($url) - 1]);
 	$page_type = $page[0];
 
+	function change_to_date($prevtime) {
+		$date = date("D, M d", strtotime($prevtime));
+		return $date;
+	}
+
 	function change_to_time($prevtime, $hasSecs) {
 		$time = strtotime($prevtime);
 		if ($hasSecs)
@@ -20,8 +25,9 @@
 	$curr_instructors_sql = 'SELECT * FROM AttendingOH INNER JOIN Instructors INNER JOIN OH WHERE AttendingOH.i_netid = Instructors.netid AND AttendingOH.time = OH.start_time GROUP BY Instructors.netid';
 	$curr_instructors_result = $mysqli->query($curr_instructors_sql);
 	$first_instructor = mysqli_fetch_assoc($curr_instructors_result);
+	$curr_instructor_netid = $first_instructor['i_netid'];
 
-	$sql = 'SELECT * FROM AttendingOH INNER JOIN Instructors INNER JOIN OH WHERE AttendingOH.i_netid = Instructors.netid AND AttendingOH.time = OH.start_time ORDER BY registration_time ASC';
+	$sql = "SELECT * FROM AttendingOH INNER JOIN Instructors INNER JOIN OH WHERE AttendingOH.i_netid = '".$curr_instructor_netid."' AND AttendingOH.i_netid = Instructors.netid AND AttendingOH.time = OH.start_time ORDER BY registration_time ASC";
 	$result = $mysqli->query($sql);
 ?>
 
@@ -34,7 +40,7 @@
 			<div class = "medium-arrow-left"></div>
 		</span>
 		<div id = "happening-now-time" class = "font-size-15 float-left">
-			<span id = "instructor_id" class = "hidden"><?php echo $first_instructor['i_netid']; ?></span>
+			<span id = "instructor_id" class = "hidden"><?php echo $curr_instructor_netid; ?></span>
 			<span id = "start_time" class = "hidden"><?php echo $first_instructor['time'];?></span>
 			<ul class = "list-style-none left float-left light-blue">
 				<li>TA</li>

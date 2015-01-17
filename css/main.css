@@ -108,6 +108,22 @@ html, body {
 	border-left: 13px solid #000;
 }
 
+.medium-arrow-left-white {
+	width: 0; 
+	height: 0; 
+	border-top: 8px solid transparent;
+	border-bottom: 8px solid transparent;
+	border-right:13px solid #FFF; 
+}
+
+.medium-arrow-right-white {
+	width: 0; 
+	height: 0; 
+	border-top: 8px solid transparent;
+	border-bottom: 8px solid transparent;
+	border-left: 13px solid #FFF;
+}
+
 .list-style-none {
 	list-style: none;
 }
@@ -402,15 +418,23 @@ select#happening-now-category {
 }
 
 
+
+
+#all-oh-toggle {
+	margin-bottom: 15px;
+}
+
 #calendar {
-    border-left: 1px black solid;
+    border-left: 1px #383838 solid;
+    border-top-left-radius: 10px;
     overflow: hidden;
 }
 
 #month {
-    border-top: 1px black solid;
-    border-right: 1px black solid;
-    border-bottom: 1px black solid;
+    border-top: 1px #383838 solid;
+    border-right: 1px #383838 solid;
+    border-bottom: 1px #383838 solid;
+    border-top-right-radius: 10px;
     width: 98%;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -450,8 +474,8 @@ select#happening-now-category {
     height: 80px;
     width: 14%;
     float: left;
-    border-right: 1px black solid;
-    border-bottom: 1px black solid;
+    border-right: 1px #383838 solid;
+    border-bottom: 1px #383838 solid;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     padding: 0px 6px 0px 4px;

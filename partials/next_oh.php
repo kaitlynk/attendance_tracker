@@ -1,6 +1,11 @@
 </div>
 <div class = "horizontal-line"></div>
 
+<?php
+	$sql = "SELECT * FROM OH WHERE netid='".$_SESSION['current_user']->netid."' AND start_time > CURDATE() ORDER BY start_time ASC LIMIT 1";
+	$result = $mysqli->query($sql);
+?>
+
 <div id = "next-oh-header" class = "font-size-18 center">
 	Your Next Office Hours
 </div>
@@ -17,9 +22,15 @@
 				<li>Time</li>
 			</ul>
 			<ul class = "list-style-none left float-left">
-				<li>Tues, March 2</li>
-				<li>Gates G11</li>
-				<li>5:00 - 11:00 PM</li>
+			<?php
+				while ($row = mysqli_fetch_assoc($result)) {
+					$location = $row['location'];
+					print "<li>".change_to_date($row['start_time'])."</li>
+					<li>$location</li>
+					<li>".change_to_time($row['start_time'], false)." - ".
+					change_to_time($row['end_time'], false)."</li>";
+				}
+			?>
 			</ul>
 		</div>
 	</div>

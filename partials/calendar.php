@@ -16,10 +16,10 @@
         echo "<div id='month'>";
         echo "<span id='month-left'>";
         echo "<span id='month-center'>";
-        echo "<span class ='arrow' id = 'month-left-arrow'><div class='medium-arrow-left'></div></span>";
+        echo "<span class ='arrow' id = 'month-left-arrow'><div class='medium-arrow-left-white'></div></span>";
         echo $curr_month . ' ' . $curr_year;
         //echo "<div id='month'>$curr_month $curr_year</div>";
-        echo "<span class ='arrow' id = 'month-right-arrow'><div class='medium-arrow-right'></div></span>";
+        echo "<span class ='arrow' id = 'month-right-arrow'><div class='medium-arrow-right-white'></div></span>";
         echo "</span>";
         echo "</span>";
         echo "<span id='month-right'>&plus;</span>";
@@ -40,7 +40,7 @@
                 echo "<div id='$day' class='day curr-day'>$day</div>";
             }
             else{
-                echo "<div id='$day' class='day'>$day</div>";
+                echo "<div id='$day' class='day thin'>$day</div>";
             }
             $day++;
         }
