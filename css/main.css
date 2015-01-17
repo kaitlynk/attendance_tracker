@@ -168,6 +168,10 @@ html, body {
 	background-color: #BFBFBF;
 }
 
+input {
+	font-family: 'Open Sans', sans-serif;
+}
+
 input:focus{
 	outline: 0;
 }
@@ -300,7 +304,7 @@ textarea {
 	font-weight: lighter;
 }
 
-#happening-now-details, #next-oh-details {
+#happening-now-details {
 	display: table;
 	padding: 5px;
 }
@@ -321,8 +325,12 @@ textarea {
 }
 
 #happening-now-time ul, #next-oh-time ul {
-	margin: 10px;
+	margin: 10px 10px;
 	padding: 0px;
+}
+
+#next-oh-time ul li {
+	margin-bottom: 5px;
 }
 
 #happening-now-list {
@@ -398,14 +406,17 @@ textarea {
 
 select#happening-now-category {
 	font-size: 14px;
-	-webkit-appearance: none;
-	font-family: 'Open Sans', sans-serif;
-	font-weight: 200;
-	padding: 2px 5px 2px 5px;
-	border: 1px solid #E3E3E3;
 	position: absolute;
 	left: 0px;
 	z-index: 5000;
+}
+
+select {
+	-webkit-appearance: none;
+	font-family: 'Open Sans', sans-serif;
+	padding: 2px 5px 2px 5px;
+	border: 1px solid #E3E3E3;
+	font-weight: 200;
 }
 
 #happening-now-submit {
@@ -418,7 +429,7 @@ select#happening-now-category {
 }
 
 #next-oh-icons {
-	margin: 10px;
+	margin: 15px 10px;
 	display: table-cell;
 	vertical-align: middle;
 }
@@ -434,6 +445,20 @@ select#happening-now-category {
 
 #next-oh-wrapper {
 	display: inline-table;
+}
+
+input.next-oh-input {
+	margin: 0px;
+	padding: 0px;
+	font-size: 15px;
+	height: 16px;
+}
+
+select.next-oh-input {
+	border-radius: 0px;
+	font-size: 15px;
+	margin: 0px 5px 0px 0px;
+	padding: 0px 5px; 
 }
 
 
