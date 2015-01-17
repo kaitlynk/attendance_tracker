@@ -20,6 +20,16 @@ $(document).ready(function() {
 
 	});
 
+	$("#happening-now-problem").focus(function() {
+		$(this).text("");
+	});
+
+	$("#happening-now-problem").focusout(function() {
+		if ($(this).text() == "") {
+			$(this).text("Description of Problem");
+		}
+	})
+
 	$(document).on("click", ".oh", function() {
 		var arr = $(this).children().first().text().split('/');
 		var month_arr = $("#month-name").text().split(' ');
@@ -62,6 +72,8 @@ function addNewSection() {
 			success: function(result) {
 				var number = result.split("|")[0];
 				var time = result.split("|")[1];
+				$("#happening-now-problem").val('');
+
 				$(".happening-now-list-section").last().removeClass("no-bottom-border");
 				$("#happening-now-list").append('<div class = "happening-now-list-section no-bottom-border center no-height">\
 					<span class = "happening-now-number hidden">'+number+'</span>\
@@ -74,12 +86,9 @@ function addNewSection() {
 					</div>\
 					<img src = "img/delete_icon.png" class = "happening-now-list-delete red clickable" />\
 				</div>');
-
-				var height = $(".happening-now-list-section").height();
-
-				$(".happening-now-list-section").last().animate({
-					height: height
-				});
+				$('#happening-now-list').stop().animate({
+				  scrollTop: $("#happening-now-list")[0].scrollHeight
+				}, 800);
 			}
 		});
 		
