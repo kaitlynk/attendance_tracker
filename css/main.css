@@ -124,6 +124,22 @@ html, body {
 	border-left: 13px solid #FFF;
 }
 
+.medium-arrow-left-gray {
+	width: 0; 
+	height: 0; 
+	border-top: 8px solid transparent;
+	border-bottom: 8px solid transparent;
+	border-right:13px solid #777;
+}
+
+.medium-arrow-right-gray {
+	width: 0; 
+	height: 0; 
+	border-top: 8px solid transparent;
+	border-bottom: 8px solid transparent;
+	border-left: 13px solid #AAA;
+}
+
 .list-style-none {
 	list-style: none;
 }
@@ -291,9 +307,12 @@ textarea {
 
 .arrow {
 	display: table-cell;
-	vertical-align: middle;
-	cursor: pointer;	
+	vertical-align: middle;	
 	padding: 0px 15px;
+}
+
+#happening-now-left-arrow, #happening-now-right-arrow, .medium-arrow-left-white, .medium-arrow-right-white {
+	cursor: pointer;
 }
 
 #happening-now-time, #next-oh-time {
