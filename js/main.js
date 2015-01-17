@@ -20,9 +20,10 @@ $(document).ready(function() {
 
 	});
 
-	$(".oh").click(function() {
-		var arr = $(this).attr('id').split('/');
-		alert(arr[0] + "\nRoom: " + arr[4] + "\nDate: " + $("#month").text() + " " + arr[1] + "\nStart: " + arr[2] + "\nEnd: " + arr[3]);
+	$(document).on("click", ".oh", function() {
+		var arr = $(this).children().first().text().split('/');
+		var month_arr = $("#month-name").text().split(' ');
+		alert(arr[0] + "\nRoom: " + arr[4] + "\nDate: " + month_arr[0] + " " + arr[1] + ", " + month_arr[1] + "\nStart: " + arr[2] + "\nEnd: " + arr[3]);
 	});
 	
 	$(document).on("click", ".medium-arrow-left-white", function() {
@@ -86,5 +87,5 @@ function addNewSection() {
 }
 
 function dispOH(first_name,last_name,day,s_time,e_time,location) {
-        $("#" + day).append("<div id='" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "' class='oh'>" + first_name + "</div>");
+	$("#" + day).append("<div class='oh clickable'>" + first_name + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "</div></div>")
 }
