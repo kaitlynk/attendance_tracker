@@ -1,5 +1,4 @@
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src = "js/main.js"></script>
+<script src = "js/student_main.js"></script>
 
 <div id = "header" class = "left border-box">
 	<div id = "menu-title" class = "white">Office Hours Tracker</div>
