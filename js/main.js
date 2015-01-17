@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
 	$(document).on("click", ".happening-now-list-delete", function() {
 		var att_id = $(this).siblings('.happening-now-number').text();
 		$.ajax({
@@ -17,9 +16,26 @@ $(document).ready(function() {
 		
 	});
 
+	$("#happening-now-right-arrow").click(function() {
+
+	});
+
 	$(".oh").click(function() {
 		var arr = $(this).attr('id').split('/');
 		alert(arr[0] + "\nRoom: " + arr[4] + "\nDate: " + $("#month").text() + " " + arr[1] + "\nStart: " + arr[2] + "\nEnd: " + arr[3]);
+	});
+	
+	$(document).on("click", ".medium-arrow-left-white", function() {
+		var m = $("#month-name").text();
+		m = m.substring(0,m.indexOf(' '));
+		$("#calendar").load("partials/calendar.php", { month : m, direction : 'left'});	
+	});
+	
+	$(document).on("click", ".medium-arrow-right-white", function() {
+		var m = $("#month-name").text();
+		m = m.substring(0,m.indexOf(' '));
+		console.log(m);
+		$("#calendar").load("partials/calendar.php", { month : m, direction : 'right'});	
 	});
 });
 

@@ -2,24 +2,42 @@
     <?php
         $months = array("January","February","March","April","May");
         $curr_year = date("Y");
-        $curr_yearN = date("y",strtotime($curr_year));
+        if(isset($_POST['month'])){
+            if($_POST['direction'] === 'left'){
+                $curr_month = $months[array_search($_POST['month'],$months)-1];
+            }
+            else {
+                $curr_month = $months[array_search($_POST['month'],$months)+1];    
+            }
+        }
+        else {
+            if(in_array(date("F"),$months)){
+                $curr_month = date("F");
+            }
+            else{
+                $curr_month = $months[0];
+            }
+        }
+        $left_arrow = 'medium-arrow-left-white';
+        $right_arrow = 'medium-arrow-right-white';
+        if($curr_month == $months[0]){
+            $left_arrow = 'medium-arrow-left-gray';
+        }
+        if($curr_month == $months[sizeof($months)-1]){
+            $right_arrow = 'medium-arrow-right-gray';
+        }
         
-        if(in_array(date("F"),$months)){
-            $curr_month = date("F");
-        }
-        else{
-            $curr_month = "January";
-        }
         $curr_monthN = date("m",strtotime($curr_month));
+        $curr_yearN = date("y",strtotime($curr_year));
         // add arrows; reload section when clicked!!!
         
         echo "<div id='month'>";
         echo "<span id='month-left'>";
         echo "<span id='month-center'>";
-        echo "<span class ='arrow' id = 'month-left-arrow'><div class='medium-arrow-left'></div></span>";
-        echo $curr_month . ' ' . $curr_year;
+        echo "<span class='arrow' id='month-left-arrow'><div class='$left_arrow'></div></span>";
+        echo "<span id='month-name'>$curr_month $curr_year</span>";
         //echo "<div id='month'>$curr_month $curr_year</div>";
-        echo "<span class ='arrow' id = 'month-right-arrow'><div class='medium-arrow-right'></div></span>";
+        echo "<span class='arrow' id='month-right-arrow'><div class='$right_arrow'></div></span>";
         echo "</span>";
         echo "</span>";
         echo "<span id='month-right'>&plus;</span>";
@@ -40,7 +58,7 @@
                 echo "<div id='$day' class='day curr-day'>$day</div>";
             }
             else{
-                echo "<div id='$day' class='day'>$day</div>";
+                echo "<div id='$day' class='day thin'>$day</div>";
             }
             $day++;
         }
@@ -51,10 +69,24 @@
                 $fill_week--;
             }
         }
-        $result = $mysqli->query("SELECT * FROM `OH` WHERE `start_time` >= '$curr_year-$curr_monthN-01 00:00:00' and `start_time` <= '$curr_year-$curr_monthN-$num_days 23:59:59' ORDER BY `start_time`");
+        
+        if(!isset($mysqli)){
+            include '../require/password.php';
+            $mysqli = new mysqli($host,$login,$password,$databaseName);
+    
+            if (mysqli_connect_error() ){
+                die("Can't connect to database: " . $mysqli->error);
+            }
+        }
+        
+        $query = "SELECT * FROM `OH` WHERE `start_time` >= '$curr_year-$curr_monthN-01 00:00:00' and `start_time` <= '$curr_year-$curr_monthN-$num_days 23:59:59' ORDER BY `start_time`";
+        $result = $mysqli->query($query);
+        echo "<script>console.log(\"" . $result->num_rows . "\")</script>";
         if($result && $result->num_rows > 0){
             while($array = $result->fetch_assoc()){
-                $result2 = $mysqli->query("SELECT * FROM `Instructors` WHERE `netid` = '" . $array['netid'] . "'");
+                $query2 = "SELECT * FROM `Instructors` WHERE `netid` = '" . $array['netid'] . "'";
+                echo "<script>console.log(\"$query2\")</script>";
+                $result2 = $mysqli->query($query2);
                 if($result2){
                     $array2 = $result2->fetch_assoc();
                     $datetime = strtotime($array['start_time']);
