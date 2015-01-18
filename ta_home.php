@@ -21,6 +21,5 @@
 				</div>
 			</div>
 		</div>
-		<div id = "calendar-popup"></div>
 	</body>
 </html>
