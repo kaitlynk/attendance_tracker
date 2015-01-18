@@ -17,6 +17,7 @@
 	while($row = mysqli_fetch_assoc($result)) {
 		$time = strtotime($row['registration_time']);
 		$timestamp = date("h:i:s A", $time); 
+		echo $row['att_id']."|".$timestamp;
 	}
 
 	$mysqli->close();
