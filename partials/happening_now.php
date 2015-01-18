@@ -3,7 +3,24 @@
 	$page = split('_',$url[count($url) - 1]);
 	$page_type = $page[0];
 
-	include 'require/date_functions.php';
+	function change_to_date($prevtime) {
+		$date = date("D, M d", strtotime($prevtime));
+		return $date;
+	}
+
+	function change_to_time($prevtime, $hasSecs) {
+		$time = strtotime($prevtime);
+		if ($hasSecs)
+			$timestamp = date("g:i:s A", $time);
+		else
+			$timestamp = date("g:i A", $time);
+		return $timestamp;
+	}
+
+	function change_back_time($prevtime) {
+		$timestamp = date("Y-m-d H:i:s", $prevtime);
+		return $timestamp;
+	}
 
 	$curr_instructors_sql = 'SELECT * FROM AttendingOH INNER JOIN Instructors INNER JOIN OH WHERE AttendingOH.i_netid = Instructors.netid AND AttendingOH.time = OH.start_time GROUP BY Instructors.netid';
 	$curr_instructors_result = $mysqli->query($curr_instructors_sql);

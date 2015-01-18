@@ -19,38 +19,28 @@ $(document).ready(function() {
 	$("#happening-now-right-arrow").click(function() {
 
 	});
-
-	$("#happening-now-problem").focus(function() {
-		$(this).text("");
-	});
-
-	$("#happening-now-problem").focusout(function() {
-		if ($(this).text() == "") {
-			$(this).text("Description of Problem");
-		}
-	})
-
-	$(document).on("click", ".oh", function() {
-		var arr = $(this).children().first().text().split('/');
-		var month_arr = $("#month-name").text().split(' ');
-		alert(arr[0] + "\nRoom: " + arr[4] + "\nDate: " + month_arr[0] + " " + arr[1] + ", " + month_arr[1] + "\nStart: " + arr[2] + "\nEnd: " + arr[3]);
-	});
 	
 	$(document).on("click", ".medium-arrow-left-white", function() {
 		var m = $("#month-name").text();
 		m = m.substring(0,m.indexOf(' '));
-		$("#calendar").load("partials/calendar.php", { month : m, direction : 'left'});	
+		var current_user = $('#student_id').length ? [$('#student_id').text(),0] : [$('#instructor_id').text(),1];
+		$("#calendar").load("partials/calendar.php", { month : m, direction : 'left', netid : current_user[0], ins : current_user[1]});	
 	});
 	
 	$(document).on("click", ".medium-arrow-right-white", function() {
 		var m = $("#month-name").text();
 		m = m.substring(0,m.indexOf(' '));
-		console.log(m);
-		$("#calendar").load("partials/calendar.php", { month : m, direction : 'right'});	
+		var current_user = $('#student_id').length ? [$('#student_id').text(),0] : [$('#instructor_id').text(),1];
+		$("#calendar").load("partials/calendar.php", { month : m, direction : 'right', netid : current_user[0], ins : current_user[1]});
+	});
+	
+	$(document).mouseup(function (e){
+		var cp = $("#calendar-popup");
+		if (!cp.is(e.target) && !($.contains(cp.get(0),e.target)) && cp.css("display") == "block") cp.hide();
 	});
 });
 
-
+var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 function addNewSection() {
 	var category = $("#happening-now-category").val();
@@ -72,8 +62,6 @@ function addNewSection() {
 			success: function(result) {
 				var number = result.split("|")[0];
 				var time = result.split("|")[1];
-				$("#happening-now-problem").val('');
-
 				$(".happening-now-list-section").last().removeClass("no-bottom-border");
 				$("#happening-now-list").append('<div class = "happening-now-list-section no-bottom-border center no-height">\
 					<span class = "happening-now-number hidden">'+number+'</span>\
@@ -86,15 +74,26 @@ function addNewSection() {
 					</div>\
 					<img src = "img/delete_icon.png" class = "happening-now-list-delete red clickable" />\
 				</div>');
-				$('#happening-now-list').stop().animate({
-				  scrollTop: $("#happening-now-list")[0].scrollHeight
-				}, 800);
+
+				var height = $(".happening-now-list-section").height();
+
+				$(".happening-now-list-section").last().animate({
+					height: height
+				});
 			}
 		});
 		
 	}
 }
 
-function dispOH(first_name,last_name,day,s_time,e_time,location) {
-	$("#" + day).append("<div class='oh clickable'>" + first_name + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "</div></div>")
+
+
+function monthToInt(monthName) {
+	for (var i = 0, len = months.length; i < len; i++) {
+		if (months[i] == monthName){
+			if (i < 9) return "0" + (i+1);
+			else return i+1;
+		}
+	}
+	return -1;
 }
