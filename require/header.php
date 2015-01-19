@@ -1,20 +1,4 @@
-<?php session_start();
-	include 'require/password.php';
-    $mysqli = new mysqli($host,$login,$password,$databaseName);
-
-    if (mysqli_connect_error() ){
-        die("Can't connect to database: " . $mysqli->error);
-    }
-
-    class Person {
-    	public $userid;
-    	public $username;
-    	public $netid;
-    	public $firstName;
-    	public $lastName;
-    	public $groups;
-    }
-?>
+<?php require 'require/db_login.php'; ?>
 
 <html>
 	<head>
@@ -23,6 +7,7 @@
 		<link rel="stylesheet" type="text/css" href="css/main.css">
 		<link rel="stylesheet" type="text/css" href="css/matt.css">
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src = "js/dev_main.js"></script>
 		<script src = "js/main.js"></script>
 	</head>
 

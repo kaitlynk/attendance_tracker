@@ -6,7 +6,7 @@
 	    die("Connection failed: " . $mysqli->connect_error);
 	}
 
-	$sql = "DELETE FROM AttendingOH WHERE att_id = ".$_POST['att_id'].";";
+	$sql = "UPDATE AttendingOH SET status=2 WHERE att_id = ".$_POST['att_id'].";";
 	$result = $mysqli->query($sql); 
 	
 	$mysqli->close();

@@ -1,4 +1,55 @@
 $(document).ready(function() {
+
+	$(document).on({
+		mouseenter: function() {
+			$(this).attr('src', 'img/confirm_icon.png');
+		}, 
+		mouseleave: function() {
+			$(this).attr('src', 'img/confirm_icon_empty.png');
+		}
+	}, ".icon-empty");
+
+	$(document).on("click", ".icon-empty", function() {
+		$(this).attr('src', 'img/confirm_icon.png');
+		$(this).removeClass('icon-empty')
+			.addClass('icon-selected');
+	});
+
+	$(document).on("click", ".icon-selected", function() {
+		$(".all-oh-list-expanded").stop();
+		$(this).attr('src', 'img/confirm_icon_empty.png');
+		$(this).addClass('icon-empty')
+			.removeClass('icon-selected');
+	});
+
+	$(document).on("click", ".all-oh-list-info", function() {
+		$(this).children(".all-oh-list-expanded").slideToggle();
+		$(this).children(".all-oh-list-feedback").slideToggle();
+	});
+
+
+	$(document).on("click", "#all-oh-toggle-cal", function() {
+		$("#calendar").show();
+		$("#all-oh-list").hide();
+		$(this).removeClass('light-gray')
+			.removeClass('clickable')
+			.addClass('black');
+		$("#all-oh-toggle-list").removeClass('black')
+			.addClass('light-gray')
+			.addClass('clickable');
+	});
+
+	$(document).on("click", "#all-oh-toggle-list", function() {
+		$("#all-oh-list").show();
+		$("#calendar").hide();
+		$(this).removeClass('light-gray')
+			.addClass('black')
+			.removeClass('clickable');
+		$("#all-oh-toggle-cal").removeClass('black')
+			.addClass('light-gray')
+			.addClass('clickable');
+	});
+
 	$(document).on("click", ".happening-now-list-delete", function() {
 		var att_id = $(this).siblings('.happening-now-number').text();
 		$.ajax({
@@ -9,26 +60,42 @@ $(document).ready(function() {
 
 		$(this).siblings().hide();
 		$(this).parent().slideToggle();
-		$(this).remove();
+		$(this).parent().remove();
+
 		if (!$(".happening-now-list-section").last().hasClass("no-bottom-border")) {
 			$(".happening-now-list-section").last().addClass("no-bottom-border");
 		}
+
+		if ($(".happening-now-list-section").length == 0) {
+			$("#happening-now-list").append("<span class = 'italic red' id = 'no-registrations-msg'>There are currently no registrations!</span>");
+		} 
 		
 	});
 
-	$("#happening-now-right-arrow").click(function() {
-
-	});
-
-	$("#happening-now-problem").focus(function() {
-		$(this).text("");
-	});
-
-	$("#happening-now-problem").focusout(function() {
-		if ($(this).text() == "") {
-			$(this).text("Description of Problem");
+	$(document).on("click", "#happening-now-right-arrow", function() {
+		if ($(this).children(".medium-arrow-right").length > 0) {
+			var next_instructor_num = parseInt($("#curr-instructor-num").text()) + 1;
+			getNextHappeningNow(next_instructor_num);
 		}
-	})
+	});
+
+	$(document).on("click", "#happening-now-left-arrow", function() {
+		if ($(this).children(".medium-arrow-left").length > 0) {
+			var next_instructor_num = parseInt($("#curr-instructor-num").text()) - 1;
+			getNextHappeningNow(next_instructor_num);
+		}
+	});
+
+	$(document).on("focus", "#happening-now-problem", function() {
+		if ($(this).val() == "Description of Problem")
+			$(this).val("");
+	});
+
+	$(document).on("focusout", "#happening-now-problem", function() {
+		if ($(this).val() == "") {
+			$(this).val("Description of Problem");
+		}
+	});
 
 	$(document).on("click", ".medium-arrow-left-white", function() {
 		var m = $("#month-name").text();
@@ -74,17 +141,19 @@ function addNewSection() {
 		if (category == "JavaScript") category = "JS";
 		var problem = $("#happening-now-problem").val();
 		var student = $("#student_id").text();
-		var instructor = $("#instructor_id").text();
-		var start_time = $("#start_time").text();
+		var instructor = $("#curr-instructor-id").text();
+		var start_time = $("#start-time").text();
 		var registration = {p_cat: category, p_desc: problem, s_netid: student, i_netid: instructor, start_time: start_time};
 		$.ajax({
 			url: 'ajax/student_add.php',
 			data: registration,
 			type: 'POST',
 			success: function(result) {
-				var number = result.split("|")[0];
+				var number = result.split("|")[0]; 
 				var time = result.split("|")[1];
 				$("#happening-now-problem").val('');
+
+				$("#no-registrations-msg").remove();
 
 				$(".happening-now-list-section").last().removeClass("no-bottom-border");
 				$("#happening-now-list").append('<div class = "happening-now-list-section no-bottom-border center no-height">\
@@ -105,6 +174,42 @@ function addNewSection() {
 		});
 		
 	}
+}
+
+function getNextHappeningNow(next_instructor_num) {
+	var next_instructor_info = $($(".curr-instructors")[next_instructor_num]).text().split('|');
+	var next_instructor_netid = next_instructor_info[0];
+	var next_instructor_time = next_instructor_info[1];
+	$.ajax({
+		url: 'ajax/happening_now_next.php',
+		data: {netid: next_instructor_netid, start_time: next_instructor_time},
+		type: 'POST',
+		success: function(result) {
+			$("#happening-now-list").html(result);
+			$("#curr-instructor-num").text(next_instructor_num);
+			$("#curr-instructor-id").text(next_instructor_netid);
+			$("#start-time").html(next_instructor_time);
+			$("#happening-now-details-ta").html("<li>" + next_instructor_info[4] + " " + next_instructor_info[5] + "</li>\
+				<li>" + next_instructor_info[2] + " - " + next_instructor_info[3] + "</li>\
+				<li>" + next_instructor_info[6] + "</li>");
+
+			if (next_instructor_num == $(".curr-instructors").length - 1) {
+				$("#happening-now-right-arrow").children().removeClass("medium-arrow-right")
+					.addClass("medium-arrow-right-gray");
+				$("#happening-now-right-arrow").removeClass("clickable");
+				$("#happening-now-left-arrow").addClass("clickable");
+				$("#happening-now-left-arrow").children().removeClass("medium-arrow-left-gray")
+					.addClass("medium-arrow-left");
+			} else if (next_instructor_num == 0){
+				$("#happening-now-left-arrow").children().removeClass("medium-arrow-left")
+					.addClass("medium-arrow-left-gray");
+				$("#happening-now-left-arrow").removeClass("clickable");
+				$("#happening-now-right-arrow").addClass("clickable");
+				$("#happening-now-right-arrow").children().removeClass("medium-arrow-right-gray")
+					.addClass("medium-arrow-right");
+			}
+		}
+	});
 }
 
 function monthToInt(monthName) {

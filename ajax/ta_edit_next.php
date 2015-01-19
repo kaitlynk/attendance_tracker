@@ -24,7 +24,7 @@
 	$new_end = $new_date.' '.$_POST['end_time'];
 
 	$sql = "UPDATE OH SET location='".mysql_escape_string($new_location)."',start_time='".mysql_escape_string($new_start)."',end_time='".mysql_escape_string($new_end)."' WHERE netid='$netid' AND start_time='$old_start'";
-	echo $sql;
+	echo $new_start;
 	$result = $mysqli->query($sql); 
 
 	$mysqli->close();
