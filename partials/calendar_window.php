@@ -3,6 +3,11 @@
     <img src='img/close_icon.png' id='window-close' alt='close'>
 </div>
 <form id = "calendar-window-form" method = "post">
+    <div id='window-text'>
+        Confirm availability and reserve rooms at <a href='http://outlook.cornell.edu/' alt='outlook.cornell.edu'>outlook.cornell.edu</a>.
+        Go to Calendar, + New, set the start and end time, then search for available rooms.  For Event, enter
+        'INFO 2300 OH, [name], [netid], [phone number].
+    </div>
     <div>Room</div>
     <input type='text' name='room' id='window-room'>
     <div>Date</div>

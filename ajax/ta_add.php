@@ -5,8 +5,8 @@
     if ($mysqli->connect_error) {
         die("Connection failed: " . $mysqli->connect_error);
     }
-    $netid = 'mat297'; //mysql_real_escape_string($_POST['netid']);
-    $location = 'Gates GUnit'; //mysql_real_escape_string($_POST['location']);
+    $netid = mysql_real_escape_string($_POST['netid']);
+    $location = mysql_real_escape_string($_POST['location']);
     $weekly = $_POST['weekly'];
     
     $start_time = $_POST['start_time'];

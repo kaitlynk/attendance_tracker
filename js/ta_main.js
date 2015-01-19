@@ -1,22 +1,11 @@
 $(document).ready(function() {
 
-	$(document).on({
-		mouseenter: function() {
-			var curr_instructor_num = parseInt($("#curr-instructor-num").text());
-			var curr_instructor_info = $($(".curr-instructors")[curr_instructor_num]).text().split('|');
-			var curr_instructor_netid = curr_instructor_info[0];
-			var login_instructor = $("#instructor_id").text();
-
-			if (login_instructor == curr_instructor_netid) {
-				$(this).append('<img src = "img/confirm_icon.png" class = "happening-now-list-finish clickable" />');
-				$(".happening-now-list-finish").css('top', ($(this).height() - $('.happening-now-list-finish').height()) / 2);
-			}
-
-		}, 
-		mouseleave: function() {
-			$(".happening-now-list-finish").remove();
-		}
-	}, ".happening-now-list-section");
+	$(".happening-now-list-section").hover(function() {
+		$(this).append('<img src = "img/confirm_icon.png" class = "happening-now-list-finish clickable" />');
+		$(".happening-now-list-finish").css('top', ($(this).height() - $('.happening-now-list-finish').height()) / 2);
+	}, function() {
+		$(".happening-now-list-finish").remove();
+	});
 
 	$(document).on("click", ".happening-now-list-finish", function() {
 		var att_id = $(this).siblings('.happening-now-number').text();
@@ -28,15 +17,11 @@ $(document).ready(function() {
 
 		$(this).siblings().hide();
 		$(this).parent().slideToggle();
-		$(this).parent().remove();
+		$(this).remove();
 
 		if (!$(".happening-now-list-section").last().hasClass("no-bottom-border")) {
 			$(".happening-now-list-section").last().addClass("no-bottom-border");
 		}
-
-		if ($(".happening-now-list-section").length == 0) {
-			$("#happening-now-list").append("<span class = 'italic red' id = 'no-registrations-msg'>There are currently no registrations!</span>");
-		} 
 	});
 
 	$(document).on("click", "#next-oh-delete", function() {
@@ -49,11 +34,6 @@ $(document).ready(function() {
 			type: 'POST',
 			success: function(response) {
 				$("#next-oh-details").html(response); 
-				var m = $("#month-name").text();
-                m = m.substring(0,m.indexOf(' '));
-                var current_user = $('#student_id').length ? [$('#student_id').text(),0] : [$('#instructor_id').text(),1];
-                $("#calendar").load("partials/calendar.php", { month : m, direction : 'none', netid : current_user[0], ins : current_user[1]});
-
 			}
 		});
 	});
@@ -84,7 +64,7 @@ $(document).ready(function() {
 		$("#next-oh-date").append("<select id = 'next-oh-date-select' class = 'next-oh-input thin'></select>");
 		setNextOHDate(next_oh_array[2]);
 
-		$("#next-oh-room").html("<input type = 'text' value = '" + $("#next-oh-room").text() + "' class = 'next-oh-input thin' size = '14'>");
+		$("#next-oh-room").html("<input type = 'date' value = '" + $("#next-oh-room").text() + "' class = 'next-oh-input thin' size = '14'>");
 
 
 		var start_time = $("#next-oh-hours").text().split(" - ")[0].split(" ")[0];
@@ -93,11 +73,11 @@ $(document).ready(function() {
 		var start_am = $("#next-oh-hours").text().split(" - ")[0].split(" ")[1];
 		var end_am = $("#next-oh-hours").text().split(" - ")[1].split(" ")[1];
 
-		$("#next-oh-start").html("<input id = 'next-oh-start-input' type = 'text' value = '" + start_time + "' class = 'next-oh-input thin' size = '3'>\
+		$("#next-oh-start").html("<input id = 'next-oh-start-input' type = 'date' value = '" + start_time + "' class = 'next-oh-input thin' size = '3'>\
 			<select class = 'next-oh-input thin'><option value = 'AM'>AM</option><option value = 'PM'>PM</option></select>");
 		$("#next-oh-start option[value='"+start_am+"']").attr('selected', true);
 
-		$("#next-oh-end").html("<input id = 'next-oh-end-input' type = 'text' value = '" + end_time + "' class = 'next-oh-input thin' size = '3'>\
+		$("#next-oh-end").html("<input id = 'next-oh-end-input' type = 'date' value = '" + end_time + "' class = 'next-oh-input thin' size = '3'>\
 			<select class = 'next-oh-input thin'><option value = 'AM'>AM</option><option value = 'PM'>PM</option></select>");
 		$("#next-oh-end option[value='"+end_am+"']").attr('selected', true);
 	});
@@ -152,14 +132,7 @@ $(document).ready(function() {
 		$.ajax({
 			url: 'ajax/ta_edit_next.php',
 			data: {year: year, month: month_num, date: date, start_time: sql_start_time, end_time: sql_end_time, room: room, old_start: old_start, netid: netid},
-			type: 'POST',
-			success: function(new_start) {
-				$("#next-oh-old-start").text(new_start);
-				var m = $("#month-name").text();
-                m = m.substring(0,m.indexOf(' '));
-                var current_user = $('#student_id').length ? [$('#student_id').text(),0] : [$('#instructor_id').text(),1];
-                $("#calendar").load("partials/calendar.php", { month : m, direction : 'none', netid : current_user[0], ins : current_user[1]});
-			}
+			type: 'POST'
 		});
 
 		$(this).attr('src', 'img/edit_icon.png')
@@ -193,7 +166,7 @@ $(document).ready(function() {
 		 */
 		
 		// TA is viewing his/her own OH
-		if (arr.length == 7) {
+		if (arr.length == 8) {
 			if (d < d_oh) {
 				var form =
 					"<form id='edit_OH' class='calendar-popup-form' method='post'>" +
@@ -201,6 +174,7 @@ $(document).ready(function() {
 					"<span>Date </span><input type='date' name='date' value='" + month_arr[1] + '-' + month + '-' + arr[1] + "'><br>" +
 					"<span>Start </span><input type='time' name='start' value='" + arr[2] + "'><br>" +
 					"<span>End </span><input type='time' name='end' value='" + arr[3] + "'><br>" +
+					"<span id='num-registered'>" + arr[7] + "</span>" +
 					"<input type='hidden' id='cal-ins-netid' value='" + arr[6] + "'>" +
 					"<input type='hidden' id='start-time-cal' value='" + month_arr[1] + "-" + month + "-" + day + " " + arr[2] + ":00'>" + 
 					"<input type='submit' value='Submit'>" +
@@ -223,6 +197,7 @@ $(document).ready(function() {
 				var form =
 					"<form id='feedback' class='calendar-popup-form' method='post'>" +
 					"<textarea name='feedback' rows='3'>" + arr[5] + "</textarea><br>" +
+					"<span id='num-registered'>" + arr[7] + "</span>" +
 					"<input type='hidden' id='cal-ins-netid' value='" + arr[6] + "'>" + 
 					"<input type='hidden' id='start-time-cal' value='" + month_arr[1] + "-" + month + "-" + day + " " + arr[2] + ":00'>" + 
 					"<input type='submit' value='Submit'>" +
@@ -259,7 +234,8 @@ $(document).ready(function() {
 				var form =
 					"<span>" + arr[0] + "</span><br>" +
 					"<span>" + arr[4] + "</span><br>" +
-					"<span>" + s_hr + ":" + start[1] + s_ampm + " - " + e_hr + ":" + end[1] + e_ampm + "</span><br>";
+					"<span>" + s_hr + ":" + start[1] + s_ampm + " - " + e_hr + ":" + end[1] + e_ampm + "</span><br>" +
+					"<span id='num-registered'>" + arr[6] + "</span>";
 				$("#calendar-popup").empty();
 				$("#calendar-popup").html(form);
 				var offset = $(this).offset();
@@ -483,12 +459,24 @@ function setNextOHDate(set_date) {
 	$("#next-oh-day").text(day);
 }
 
-function dispOH(first_name,last_name,day,s_time,e_time,location, i_id) {
-	$("#" + (+day)).append("<div class='oh clickable'>" + first_name + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "/" + i_id + "</div></div>")
+function dispOH(first_name,last_name,day,s_time,e_time,location, i_id, strikethrough, registered) {
+	var hr_s = parseInt(s_time.substring(0,s_time.indexOf(':'))) % 12;
+	if (hr_s == 0) hr_s = 12;
+	console.log(hr_s);
+	var hr_e = parseInt(e_time.substring(0,e_time.indexOf(':'))) % 12;
+	if (hr_e == 0) hr_e = 12;
+	var time = hr_s + s_time.substring(s_time.indexOf(':')) + '-' + hr_e + e_time.substring(e_time.indexOf(':'));
+	$("#" + (+day)).append("<div class='oh clickable" + strikethrough + "'>" + time + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "/" + i_id + "/" + registered + "</div></div>")
 }
-function dispOH_self(first_name,last_name,day,s_time,e_time,location, feedback, cancel, i_id) {
+function dispOH_self(first_name,last_name,day,s_time,e_time,location, feedback, cancel, i_id, strikethrough, registered) {
+	var hr_s = parseInt(s_time.substring(0,s_time.indexOf(':'))) % 12;
+	if (hr_s == 0) hr_s = 12;
+	console.log(hr_s);
+	var hr_e = parseInt(e_time.substring(0,e_time.indexOf(':'))) % 12;
+	if (hr_e == 0) hr_e = 12;
+	var time = hr_s + s_time.substring(s_time.indexOf(':')) + '-' + hr_e + e_time.substring(e_time.indexOf(':'));
 	if(cancel !== ""){
 		$("#" + (+day)).addClass('dark-red');
 	}
-	$("#" + (+day)).append("<div class='oh clickable'>" + first_name + cancel + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "/" + feedback + "/" + i_id + "</div></div>")
+	$("#" + (+day)).append("<div class='oh clickable " + strikethrough + "'>" + time + cancel + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "/" + feedback + "/" + i_id + "/" + registered + "</div></div>")
 }

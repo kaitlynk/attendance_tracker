@@ -9,6 +9,8 @@ $(document).ready(function() {
         var d = new Date();
         var d_oh = new Date(month_arr[0] + ' ' + arr[1] + ', ' + month_arr[1] + ' ' + arr[3]);
         
+        var reg = ($(this).hasClass('dark-red'));
+        
         if (d < d_oh) {
             var start = arr[2].split(':');
             var end = arr[3].split(':');
@@ -16,7 +18,6 @@ $(document).ready(function() {
             var e_ampm = (end[0] > 11) ? " PM" : " AM";
             var s_hr = (start[0] % 12) == 0 ? 12 : start[0] % 12;
             var e_hr = (end[0] % 12) == 0 ? 12 : end[0] % 12;
-            var reg = ($(this).hasClass('dark-red'));
             var form =
                 "<form id='register-" + reg + "' class='calendar-popup-form' method='post'>" +
                 "<span class='calendar-popup-left'>TA </span><span class='calendar-popup-right'>" + arr[0] + "</span><br>" +
@@ -54,11 +55,23 @@ $(document).ready(function() {
             });
         }
         else {
+            var start = arr[2].split(':');
+            var end = arr[3].split(':');
+            var s_ampm = (start[0] > 11) ? " PM" : " AM";
+            var e_ampm = (end[0] > 11) ? " PM" : " AM";
+            var s_hr = (start[0] % 12) == 0 ? 12 : start[0] % 12;
+            var e_hr = (end[0] % 12) == 0 ? 12 : end[0] % 12;
+            if (reg) {
+                var reg = ($(this).hasClass('dark-red'));
                 var form =
                     "<form id='feedback' class='calendar-popup-form' method='post'>" +
+                    "<span>" + arr[0] + "</span><br>" +
+                    "<span>" + arr[4] + "</span><br>" +
+                    "<span>" + s_hr + ":" + start[1] + s_ampm + " - " + e_hr + ":" + end[1] + e_ampm + "</span><br>" +
+                    "<span id='num-registered'>" + arr[6] + "</span>" + 
                     "<textarea name='feedback' rows='3'>" + arr[5] + "</textarea><br>" +
-                    "<input type='hidden' id='i-netid-cal' value='" + arr[6] + "'>" +
-                    "<input type='hidden' id='s-netid-cal' value='" + arr[7] + "'>" +
+                    "<input type='hidden' id='i-netid-cal' value='" + arr[7] + "'>" +
+                    "<input type='hidden' id='s-netid-cal' value='" + arr[8] + "'>" +
                     "<input type='hidden' id='start-time-cal' value='" + month_arr[1] + "-" + month + "-" + day + " " + arr[2] + ":00'>" + 
                     "<input type='submit' value='Submit'>" +
                     "</form>";
@@ -75,6 +88,24 @@ $(document).ready(function() {
                         "left" : x_pos,
                         "display" : "block"
                 });
+            }
+            else {
+                var form =
+                        "<span>" + arr[0] + "</span><br>" +
+                        "<span>" + arr[4] + "</span><br>" +
+                        "<span>" + s_hr + ":" + start[1] + s_ampm + " - " + e_hr + ":" + end[1] + e_ampm + "</span><br>" + 
+                        "<span id='num-registered'>" + arr[6] + "</span>";
+                $("#calendar-popup").empty();
+                $("#calendar-popup").html(form);
+                var offset = $(this).offset();
+                var x_pos = offset.left - $("#calendar-popup").width() + 40;
+                var y_pos = offset.top - $("#calendar-popup").height() - 28;
+                $("#calendar-popup").css({
+                        "top" : y_pos,
+                        "left" : x_pos,
+                        "display" : "block"
+                });
+            }
         }        
     });
     
@@ -176,13 +207,28 @@ $(document).ready(function() {
     
 });
 
-function dispOH(first_name,last_name,day,s_time,e_time,location,feedback,s_id,i_id) {
-    $("#" + (+day)).append("<div class='oh clickable'>" + first_name + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "/" + feedback + "/" + s_id + "/" + i_id + "</div></div>")
-}
-
-function dispOH_future(first_name,last_name,day,s_time,e_time,location,curr_r,p_cat,p_desc,registered,i_id,s_id) {
+function dispOH(first_name,last_name,day,s_time,e_time,location,feedback,curr_r,registered,s_id,i_id) {
+    var hr_s = parseInt(s_time.substring(0,s_time.indexOf(':'))) % 12;
+    if (hr_s == 0) hr_s = 12;
+    var hr_e = parseInt(e_time.substring(0,e_time.indexOf(':'))) % 12;
+    if (hr_e == 0) hr_e = 12;
+    var time = hr_s + s_time.substring(s_time.indexOf(':')) + '-' + hr_e + e_time.substring(e_time.indexOf(':'));
     if(curr_r !== ''){
             $("#" + (+day)).addClass('dark-red');
     }
-    $("#" + (+day)).append("<div class='oh clickable" + curr_r + "'>" + first_name + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "/" + p_cat + "/" + p_desc + "/" + registered + "/" + i_id + "/" + s_id + "</div></div>")
+    console.log(curr_r);
+    $("#" + (+day)).append("<div class='oh clickable strikethrough" + curr_r + "'>" + time + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "/" + feedback + "/" + registered + "/" + s_id + "/" + i_id + "</div></div>")
+}
+
+function dispOH_future(first_name,last_name,day,s_time,e_time,location,curr_r,p_cat,p_desc,registered,i_id,s_id) {
+    var hr_s = parseInt(s_time.substring(0,s_time.indexOf(':'))) % 12;
+    if (hr_s == 0) hr_s = 12;
+    console.log(hr_s);
+    var hr_e = parseInt(e_time.substring(0,e_time.indexOf(':'))) % 12;
+    if (hr_e == 0) hr_e = 12;
+    var time = hr_s + s_time.substring(s_time.indexOf(':')) + '-' + hr_e + e_time.substring(e_time.indexOf(':'));
+    if(curr_r !== ''){
+            $("#" + (+day)).addClass('dark-red');
+    }
+    $("#" + (+day)).append("<div class='oh clickable" + curr_r + "'>" + time + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "/" + p_cat + "/" + p_desc + "/" + registered + "/" + i_id + "/" + s_id + "</div></div>")
 }
