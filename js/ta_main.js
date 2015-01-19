@@ -146,10 +146,14 @@ $(document).ready(function() {
 	$(document).on("click", ".oh", function() {
 		var arr = $(this).children("#info").first().text().split('/');
 		var month_arr = $("#month-name").text().split(' ');
-		var day = month_arr[0] + ' ' + arr[1] + ', ' + month_arr[1]
-		var d = new Date();
-		var d_oh = new Date(day + ' ' + arr[3]);
+		var month = monthToInt(month_arr[0]);
+		var day = parseInt($(this).parent().attr('id'));
+		if (day < 10) day = "0" + (day);
 		
+		var d = new Date();
+		var d_oh = new Date(month_arr[0] + ' ' + arr[1] + ', ' + month_arr[1] + ' ' + arr[3]);
+		
+
 		/* Name: arr[0]
 		 * Room: arr[4]
 		 * Month: month_arr[0]
@@ -158,18 +162,21 @@ $(document).ready(function() {
 		 * Start Time: arr[2]
 		 * End Time: arr[3]
 		 * Feedback: arr[5]
+		 * netid: arr[6]
 		 */
 		
 		// TA is viewing his/her own OH
-		if (arr.length == 6) {
+		if (arr.length == 7) {
 			if (d < d_oh) {
 				var form =
 					"<form id='edit_OH' class='calendar-popup-form' method='post'>" +
 					"<span>Room </span><input type='text' name='room' value='" + arr[4] + "'><br>" +
-					"<span>Date </span><input type='date' name='date' value='" + month_arr[1] + '-' + monthToInt(month_arr[0]) + '-' + arr[1] + "'><br>" +
+					"<span>Date </span><input type='date' name='date' value='" + month_arr[1] + '-' + month + '-' + arr[1] + "'><br>" +
 					"<span>Start </span><input type='time' name='start' value='" + arr[2] + "'><br>" +
 					"<span>End </span><input type='time' name='end' value='" + arr[3] + "'><br>" +
-					"<input type='submit' value='Submit'>" + 
+					"<input type='hidden' id='cal-ins-netid' value='" + arr[6] + "'>" +
+					"<input type='hidden' id='start-time-cal' value='" + month_arr[1] + "-" + month + "-" + day + " " + arr[2] + ":00'>" + 
+					"<input type='submit' value='Submit'>" +
 					"</form>";
 				$("#calendar-popup").empty();
 				$("#calendar-popup").html(form);
@@ -189,6 +196,8 @@ $(document).ready(function() {
 				var form =
 					"<form id='feedback' class='calendar-popup-form' method='post'>" +
 					"<textarea name='feedback' rows='3'>" + arr[5] + "</textarea><br>" +
+					"<input type='hidden' id='cal-ins-netid' value='" + arr[6] + "'>" + 
+					"<input type='hidden' id='start-time-cal' value='" + month_arr[1] + "-" + month + "-" + day + " " + arr[2] + ":00'>" + 
 					"<input type='submit' value='Submit'>" +
 					"</form>";
 				$("#calendar-popup").empty();
@@ -219,7 +228,7 @@ $(document).ready(function() {
 			var e_ampm = (end[0] > 11) ? " PM" : " AM";
 			var s_hr = (start[0] % 12) == 0 ? 12 : start[0] % 12;
 			var e_hr = (end[0] % 12) == 0 ? 12 : end[0] % 12;
-			if (d < d_oh) {
+			//if (d < d_oh) {
 				var form =
 					"<span>" + arr[0] + "</span><br>" +
 					"<span>" + arr[4] + "</span><br>" +
@@ -234,7 +243,7 @@ $(document).ready(function() {
 					"left" : x_pos,
 					"display" : "block"
 				});
-			}
+			/*}
 			else {
 				var form =
 					"<span>" + arr[0] + "</span><br>" +
@@ -255,21 +264,100 @@ $(document).ready(function() {
 					"left" : x_pos,
 					"display" : "block"
 				});
-			}
+			}*/
 		}
 	});
 	
 	$(document).on("click", ".oh img", function(e) {
+		var arr = $(this).next().text().split('/');
+		console.log(arr);
+		var month_arr = $("#month-name").text().split(' ');
+		var month = monthToInt(month_arr[0]);
+		var day = parseInt($(this).parent().parent().attr('id'));
+		if (day < 10) day = "0" + (day);
+		var old_start = month_arr[1] + "-" + month + "-" + day + " " + arr[2] + ":00";
 		e.stopPropagation();
-		// TODO: remove OH
+		console.log("test");
+		$.ajax({
+			url: 'ajax/ta_delete_next.php',
+			type: 'post',
+			data: {netid : arr[6], old_start : old_start},
+			success:function(){
+				console.log("suecces?");
+				console.log(arr[6], old_start);
+				var m = $("#month-name").text();
+				m = m.substring(0,m.indexOf(' '));
+				var current_user = $('#student_id').length ? [$('#student_id').text(),0] : [$('#instructor_id').text(),1];
+				$("#calendar").load("partials/calendar.php", { month : m, direction : 'none', netid : current_user[0], ins : current_user[1]});
+			},
+			error:function(){
+				console.log("error");
+			}
+		})
+		//cal-ins-netid
+		/*$(document).on('submit', 'form#register-false', function(e) {
+			e.preventDefault();
+			var p_cat = $("#p-cat-cal").val();
+			var p_desc = $("#p-desc-cal").val();
+			var s_netid = $("#s-netid-cal").val(); 
+			var i_netid = $("#i-netid-cal").val(); 
+			var old_start = $("#next-oh-old-start").text();
+			var netid = $("#instructor_id").text();
+	
+			$.ajax({
+				url: 'ajax/ta_delete_next.php',
+				data: {old_start: old_start, netid: netid},
+				type: 'POST',
+				success: function(response) {
+					$("#next-oh-details").html(response); 
+				}
+			});
+		});*/
 	});
+	
+	$(document).on("click", "#month-right", function() {
+		var p = $("#happening-now-header").offset();
+		var h = $("#happening-now-header").height() + $("#happening-now-info").height();
+		var w = $("#happening-now-header").width();
+		$("#calendar-window").css({
+			"top" : p.top + "px",
+			"left" : p.left + "px",
+			"width" : w + "px",
+			"height" : h + "px",
+			"display" : "block"
+		});
+	});
+	
+	$(document).on("click", "#window-close", function() {
+		$("#calendar-window").hide();	
+	});
+	
 	//TODO
 	$(document).on('submit', 'form#edit_OH', function(e) {
+		/*
+		 *new_location = $_POST['room'];
+	$netid = $_POST['netid'];
+	$old_start = $_POST['old_start'];
+	$month = $_POST['month'];
+	while (strlen($month) < 2) {
+		$month = '0'.$month;
+	}
+
+	$date = $_POST['date'];
+	while (strlen($date) < 2) {
+		$date = '0'.$date;
+	}
+
+	$new_date = $_POST['year'].'-'.$month.'-'.$date;
+	$new_start = $new_date.' '.$_POST['start_time'];
+	$new_end = $new_date.' '.$_POST['end_time'];
+	*/
+
 		e.preventDefault();
 		$.ajax({
-		    url:'partials/OH_edit_instructor.php',
+		    url:'ajax/OH_edit_instructor.php',
 		    type:'post',
-		    data:$('#calendar-popup-form').serialize(),
+		    data:{netid : $("#cal-ins-netid").val(), old_start : $("#start-time-cal").val()},
 		    success:function(){
 			$("#calendar-popup").hide();
 			var m = $("#month-name").text();
@@ -279,12 +367,43 @@ $(document).ready(function() {
 		    }
 		});
 	});
+	
+	$(document).on('submit', 'form#calendar-window-form', function(e) {
+		e.preventDefault();
+		var netid = $("#window-netid").text();
+		var location = $('#window-room').val();
+		var date = $('#window-date').val();
+		var start_time = date + ' ' + $('#window-start-time').val() + ':00';
+		var end_time = date + ' ' + $('#window-end-time').val() + ':00';
+		var weekly = $('#window-weekly').prop('checked');
+		console.log(netid + ", " + location + ", " + start_time + ", " + end_time + ", " + weekly);
+		
+		$.ajax({
+			url:'ajax/ta_add.php',
+			type:'post',
+			data:{netid : netid, location : location, date : date, start_time : start_time, end_time : end_time, weekly : weekly},
+			success:function(){
+				$("#calendar-window").hide();
+				var m = $("#month-name").text();
+				m = m.substring(0,m.indexOf(' '));
+				var current_user = $('#student_id').length ? [$('#student_id').text(),0] : [$('#instructor_id').text(),1];
+				$("#calendar").load("partials/calendar.php", { month : m, direction : 'none', netid : current_user[0], ins : current_user[1]});
+			}
+		});
+	});
+	
 	$(document).on('submit', 'form#feedback', function(e) {
 		e.preventDefault();
+		// ta netid
+		// date/time
+		// feedback
+		console.log($('#cal-ins-netid').val());
+		console.log($('#start-time-cal').val());
+		console.log($("form#feedback textarea").val());
 		$.ajax({
-		    url:'partials/OH_feedback_instructor.php',
+		    url:'ajax/ta_feedback.php',
 		    type:'post',
-		    data:$('#calendar-popup-form').serialize(),
+		    data:{netid : $('#cal-ins-netid').val(), start_time : $('#start-time-cal').val(), feedback : $("form#feedback textarea").val()},
 		    success:function(){
 			$("#calendar-popup").hide();
 			var m = $("#month-name").text();
@@ -337,12 +456,12 @@ function setNextOHDate(set_date) {
 	$("#next-oh-day").text(day);
 }
 
-function dispOH(first_name,last_name,day,s_time,e_time,location) {
-	$("#" + (+day)).append("<div class='oh clickable'>" + first_name + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "</div></div>")
+function dispOH(first_name,last_name,day,s_time,e_time,location, i_id) {
+	$("#" + (+day)).append("<div class='oh clickable'>" + first_name + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "/" + i_id + "</div></div>")
 }
-function dispOH_self(first_name,last_name,day,s_time,e_time,location, feedback, cancel) {
+function dispOH_self(first_name,last_name,day,s_time,e_time,location, feedback, cancel, i_id) {
 	if(cancel !== ""){
 		$("#" + (+day)).addClass('dark-red');
 	}
-	$("#" + (+day)).append("<div class='oh clickable'>" + first_name + cancel + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "/" + feedback + "</div></div>")
+	$("#" + (+day)).append("<div class='oh clickable'>" + first_name + cancel + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "/" + feedback + "/" + i_id + "</div></div>")
 }

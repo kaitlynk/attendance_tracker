@@ -22,5 +22,8 @@
 			</div>
 		</div>
 		<div id = "calendar-popup"></div>
+		<div id = "calendar-window" class = "border-box">
+			<?php include 'partials/calendar_window.php'; ?>
+		</div>
 	</body>
 </html>

@@ -48,9 +48,21 @@ $(document).ready(function() {
 		var cp = $("#calendar-popup");
 		if (!cp.is(e.target) && !($.contains(cp.get(0),e.target)) && cp.css("display") == "block") cp.hide();
 	});
+	
+	$(document).on('focus click', '#feedback textarea', function() {
+		if ($(this).val() == "Feedback") {
+			$(this).val("");
+		}
+	});
+
+	$(document).on('focusout', '#feedback textarea', function() {
+		if ($(this).val() == "") {
+			$(this).val("Feedback");
+		}
+	});
 });
 
-
+var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 function addNewSection() {
 	var category = $("#happening-now-category").val();

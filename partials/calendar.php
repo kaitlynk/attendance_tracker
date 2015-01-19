@@ -31,7 +31,9 @@
     
     $curr_monthN = date("m",strtotime($curr_month));
     $curr_yearN = date("y",strtotime($curr_year));
-    // add arrows; reload section when clicked!!!
+    
+    $ins = isset($_POST['ins']) ? $_POST['ins'] : $_SESSION['ins'];
+    $current_user = isset($_POST['netid']) ? $_POST['netid'] : $_SESSION['current_user']->netid;
     
     echo "<div id='month'>";
     echo "<span id='month-left'>";
@@ -42,7 +44,7 @@
     echo "<span class='arrow' id='month-right-arrow'><div class='$right_arrow'></div></span>";
     echo "</span>";
     echo "</span>";
-    echo "<span id='month-right'>&plus;</span>";
+    if ($ins) echo "<span id='month-right'>&plus;<div class='hidden' id='window-netid'>$current_user</div></span>";
     echo "</div>";
     $day = 1;
     $num_days = cal_days_in_month(CAL_GREGORIAN,$curr_monthN,$curr_yearN);
@@ -92,8 +94,6 @@
                 $oh_day = date('d',$datetime);
                 $oh_starttime = date('H:i',$datetime);
                 $oh_endtime = date('H:i',strtotime($array['end_time']));
-                $ins = isset($_POST['ins']) ? $_POST['ins'] : $_SESSION['ins'];
-                $current_user = isset($_POST['netid']) ? $_POST['netid'] : $_SESSION['current_user']->netid;
                 
                 if($ins){
                     if($array['netid'] === $current_user){
@@ -103,10 +103,10 @@
                         $cancel = $curr_time < $oh_time ? "&nbsp;<img src=\'img/cancel_icon.png\' alt=\'cancel\'>"  : "";
                         
                         $feedback = empty($array['feedback']) ? "Feedback" : $array['feedback'];
-                        echo "<script>dispOH_self('" . $array2['first_name'] . "','" . $array2['last_name'] . "','$oh_day','$oh_starttime','$oh_endtime','" . $array['location'] . "', '$feedback', '" . $cancel . "');</script>";
+                        echo "<script>dispOH_self('" . $array2['first_name'] . "','" . $array2['last_name'] . "','$oh_day','$oh_starttime','$oh_endtime','" . $array['location'] . "', '$feedback', '$cancel', '$current_user');</script>";
                     }
                     else{
-                        echo "<script>dispOH('" . $array2['first_name'] . "','" . $array2['last_name'] . "','$oh_day','$oh_starttime','$oh_endtime','" . $array['location'] . "');</script>";    
+                        echo "<script>dispOH('" . $array2['first_name'] . "','" . $array2['last_name'] . "','$oh_day','$oh_starttime','$oh_endtime','" . $array['location'] . "', '$current_user');</script>";    
                     }
                 }
                 else{
@@ -121,25 +121,23 @@
                         $p_desc = "Description of Problem";
                         $curr_user_registered = "";
                         if($result3 && $r > 0){
-                            $array3 = $result3->fetch_assoc();
-                            while($r > 0){
+                            while($array3 = $result3->fetch_assoc()){
                                 if($array3['s_netid'] == $current_user){
                                     $p_cat = $array3['p_cat'];
                                     $p_desc = $array3['p_desc'];
                                     $curr_user_registered = ' dark-red';
                                     break;
                                 }
-                                $r--;
                             }
                         }
-                        echo "<script>dispOH_future('" . $array2['first_name'] . "','" . $array2['last_name'] . "','$oh_day','$oh_starttime','$oh_endtime','" . $array['location'] . "', '$curr_user_registered', '$p_cat', '$p_desc', '$registered');</script>";
+                        echo "<script>dispOH_future('" . $array2['first_name'] . "','" . $array2['last_name'] . "','$oh_day','$oh_starttime','$oh_endtime','" . $array['location'] . "', '$curr_user_registered', '$p_cat', '$p_desc', '$registered', '" . $array['netid'] . "', '$current_user');</script>";
                     }
                     else{
                         $query4 = "SELECT * FROM `AttendingOH` WHERE `s_netid` = '" . $current_user . "' and `i_netid` = '" . $array['netid'] . "' and `time` = '" . $array['start_time'] . "' ORDER BY `registration_time` DESC";
                         $result4 = $mysqli->query($query4);
                         $array4 = $result4->fetch_assoc();
                         $feedback = empty($array4['feedback']) ? "Feedback" : $array4['feedback'];
-                        echo "<script>dispOH('" . $array2['first_name'] . "','" . $array2['last_name'] . "','$oh_day','$oh_starttime','$oh_endtime','" . $array['location'] . "', '$feedback');</script>";
+                        echo "<script>dispOH('" . $array2['first_name'] . "','" . $array2['last_name'] . "','$oh_day','$oh_starttime','$oh_endtime','" . $array['location'] . "', '$feedback', '" . $array['netid'] . "', '$current_user');</script>";
                     }
                 }
             }
