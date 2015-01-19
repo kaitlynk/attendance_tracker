@@ -8,6 +8,8 @@
 		$happening_now = 0;
 		$curr_instructors_sql = 'SELECT DISTINCT(OH.netid), start_time, end_time, location, Instructors.first_name, Instructors.last_name FROM OH INNER JOIN Instructors ON OH.netid = Instructors.netid INNER JOIN AttendingOH ON AttendingOH.i_netid = OH.netid WHERE NOW() < OH.start_time ORDER BY OH.start_time ASC LIMIT 1';
 		$curr_instructors_result = $mysqli->query($curr_instructors_sql);
+	} else {
+		$happening_now = 1; 
 	}
 
 	$curr_instructors = array();
@@ -27,9 +29,9 @@
 <div id = "happening-now-header" class = "font-size-18 center">
 	<?php 
 		if ($happening_now) {
-			echo 'Happening Now';
+			echo 'Happening Now!';
 			if (sizeof($curr_instructors) > 1)
-				echo '(<span id = "happening-now-num">'.count($curr_instructors).'</span>)';
+				echo ' (<span id = "happening-now-num">'.count($curr_instructors).'</span>)';
 		} else {
 			echo 'Next Office Hours';
 		}

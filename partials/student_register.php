@@ -1,5 +1,5 @@
 	<form id = "happening-now-form" class = "center" onsubmit = "addNewSection();return false;" >
-		<textarea id = "happening-now-problem" class = "font-size-14 border-box">Description of Problem</textarea>
+		<textarea id = "happening-now-problem" class = "font-size-14 border-box">Description of Problem (approx. 10 words)</textarea>
 		<div id = "happening-now-bottom-wrapper">
 			<select id = "happening-now-category">
 				<option value = "">-- Select Category --</option>

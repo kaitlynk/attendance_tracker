@@ -8,15 +8,15 @@
 				All Office Hours
 			</div>
 			<div id = "all-oh-toggle" class = "left thin">
-				<span id = "all-oh-toggle-list" class = "black">List</span>
+				<span id = "all-oh-toggle-cal" class = "black">Calendar</span>
 				| 
-				<span id = "all-oh-toggle-cal" class = "light-gray clickable">Calendar</span>
+				<span id = "all-oh-toggle-list" class = "light-gray clickable">List</span>
 			</div>
-			<div id = "all-oh-list">
-				<?php include 'partials/all_oh_list.php'; ?>
-			</div>
-			<div id = "calendar" class = "hidden">
+			<div id = "calendar">
 				<?php include 'partials/calendar.php'; ?>
+			</div>
+			<div id = "all-oh-list" class = "hidden">
+				<?php include 'partials/all_oh_list.php'; ?>
 			</div>
 		</div>
 	</div>

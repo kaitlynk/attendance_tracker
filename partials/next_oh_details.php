@@ -1,5 +1,5 @@
 <?php
-	$sql = "SELECT * FROM OH WHERE netid='".$_SESSION['current_user']->netid."' AND start_time > CURDATE() ORDER BY start_time ASC LIMIT 1";
+	$sql = "SELECT * FROM OH WHERE netid='".$_SESSION['current_user']->netid."' AND end_time > NOW() AND start_time > NOW() ORDER BY start_time ASC LIMIT 1";
 	$result = $mysqli->query($sql);
 	
 	while ($row = mysqli_fetch_assoc($result)) {

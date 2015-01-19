@@ -1,5 +1,7 @@
 <?php session_start();
-	include 'require/password.php';
+	if (file_exists('require/password.php'))
+        require 'require/password.php';
+    else require '../require/password.php';
     $mysqli = new mysqli($host,$login,$password,$databaseName);
 
     if (mysqli_connect_error() ){

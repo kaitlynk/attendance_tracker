@@ -20,13 +20,14 @@ $(document).ready(function() {
 
 	});
 
-	$("#happening-now-problem").focus(function() {
-		$(this).text("");
+	$(document).on("focus", "#happening-now-problem", function() {
+		if ($(this).val() == "Description of Problem (approx. 10 words)")
+			$(this).val("");
 	});
 
-	$("#happening-now-problem").focusout(function() {
-		if ($(this).text() == "") {
-			$(this).text("Description of Problem");
+	$(document).on("focusout", "#happening-now-problem", function() {
+		if ($(this).val() == "") {
+			$(this).val("Description of Problem (approx. 10 words)");
 		}
 	})
 
