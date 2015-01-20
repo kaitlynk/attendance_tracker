@@ -1,7 +1,6 @@
 .clear {
     clear: both;
 }
-
 #calendar-window {
     position: absolute;
     display: none;
@@ -13,75 +12,68 @@
     background-color: #FFF;
     
 }
-
 #calendar-window-header {
     width: 100%;
     margin: 5px auto 10px auto;
     padding-bottom: 5px;
     border-bottom: 1px solid #E3E3E3;
-    font-size: 24px;
+    font-size: 18px;
 }
-
+#window-text {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
 #window-close {
     float: right;
     margin-top: 7px;
     cursor: pointer;
     opacity: .7;
 }
-
 #calendar-window-header img:hover {
     opacity: 1;
 }
-
 #calendar-window-form {
-    font-size: 20px;
+    font-size: 14px;
 }
-
 #calendar-window-form input {
     -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
     margin: 5px 0 10px 0;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: lighter;
 }
-
 #calendar-window-form input[type='text'], #calendar-window-form input[type='date'], #calendar-window-form input[type='submit'] {
         display: block;
-	width: 100%;
+    width: 100%;
 }
-
 #calendar-window-form input[type='time'] {
     width: 40%;
 }
-
 #calendar-window-form input[type='submit'] {
     margin-top: 15px;
     background-color: #EEE;
 }
-
 #calendar-window-form input[type='submit']:hover {
     background-color: #DDD;
 }
-
 #window-form-time {
     width: 100%;
 }
-
 #time-center {
     float: left;
     width: 20%;
     text-align: center;
 }
-
 input[type='checkbox'], input[type='date'], input[type='time'] {
     cursor: pointer;
 }
-
 .cal-error {
     color: #fb0;
 }
-
 .cal-error + #p-cat-cal {
     border-color: #fb0;
+}
+.strikethrough {
+    text-decoration: line-through;
 }

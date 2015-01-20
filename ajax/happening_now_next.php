@@ -5,7 +5,7 @@
 	$sql = "SELECT * FROM AttendingOH WHERE i_netid = '".$_POST['netid']."' AND time = '".$_POST['start_time']."' AND status = 0 ORDER BY registration_time ASC";
 	$result = $mysqli->query($sql);
 
-	if (mysqli_num_rows($result) > 0) {
+	if (mysqli_num_rows($result) > 0) { 
 	    while($row = mysqli_fetch_assoc($result)) {
 	        echo "<div class = 'happening-now-list-section center'>
 	       		<span class = 'happening-now-number hidden'>".$row['att_id']."</span>

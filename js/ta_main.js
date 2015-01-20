@@ -1,11 +1,18 @@
 $(document).ready(function() {
 
-	$(".happening-now-list-section").hover(function() {
-		$(this).append('<img src = "img/confirm_icon.png" class = "happening-now-list-finish clickable" />');
-		$(".happening-now-list-finish").css('top', ($(this).height() - $('.happening-now-list-finish').height()) / 2);
-	}, function() {
-		$(".happening-now-list-finish").remove();
-	});
+	$(document).on({
+		mouseenter: function() {
+			var curr_instructor = $("#instructor_id").text();
+			var happening_now_instructor = $("#curr-instructor-id").text();
+			if (curr_instructor == happening_now_instructor) {
+				$(this).append('<img src = "img/confirm_icon.png" class = "happening-now-list-finish clickable" />');
+				$(".happening-now-list-finish").css('top', ($(this).height() - $('.happening-now-list-finish').height()) / 2);
+			}
+		}, 
+		mouseleave: function() {
+			$(".happening-now-list-finish").remove();
+		}
+	}, ".happening-now-list-section");
 
 	$(document).on("click", ".happening-now-list-finish", function() {
 		var att_id = $(this).siblings('.happening-now-number').text();
@@ -64,7 +71,7 @@ $(document).ready(function() {
 		$("#next-oh-date").append("<select id = 'next-oh-date-select' class = 'next-oh-input thin'></select>");
 		setNextOHDate(next_oh_array[2]);
 
-		$("#next-oh-room").html("<input type = 'date' value = '" + $("#next-oh-room").text() + "' class = 'next-oh-input thin' size = '14'>");
+		$("#next-oh-room").html("<input type = 'text' value = '" + $("#next-oh-room").text() + "' class = 'next-oh-input thin' size = '14'>");
 
 
 		var start_time = $("#next-oh-hours").text().split(" - ")[0].split(" ")[0];
@@ -73,11 +80,11 @@ $(document).ready(function() {
 		var start_am = $("#next-oh-hours").text().split(" - ")[0].split(" ")[1];
 		var end_am = $("#next-oh-hours").text().split(" - ")[1].split(" ")[1];
 
-		$("#next-oh-start").html("<input id = 'next-oh-start-input' type = 'date' value = '" + start_time + "' class = 'next-oh-input thin' size = '3'>\
+		$("#next-oh-start").html("<input id = 'next-oh-start-input' type = 'text' value = '" + start_time + "' class = 'next-oh-input thin' size = '3'>\
 			<select class = 'next-oh-input thin'><option value = 'AM'>AM</option><option value = 'PM'>PM</option></select>");
 		$("#next-oh-start option[value='"+start_am+"']").attr('selected', true);
 
-		$("#next-oh-end").html("<input id = 'next-oh-end-input' type = 'date' value = '" + end_time + "' class = 'next-oh-input thin' size = '3'>\
+		$("#next-oh-end").html("<input id = 'next-oh-end-input' type = 'text' value = '" + end_time + "' class = 'next-oh-input thin' size = '3'>\
 			<select class = 'next-oh-input thin'><option value = 'AM'>AM</option><option value = 'PM'>PM</option></select>");
 		$("#next-oh-end option[value='"+end_am+"']").attr('selected', true);
 	});
@@ -475,8 +482,8 @@ function dispOH_self(first_name,last_name,day,s_time,e_time,location, feedback, 
 	var hr_e = parseInt(e_time.substring(0,e_time.indexOf(':'))) % 12;
 	if (hr_e == 0) hr_e = 12;
 	var time = hr_s + s_time.substring(s_time.indexOf(':')) + '-' + hr_e + e_time.substring(e_time.indexOf(':'));
-	if(cancel !== ""){
-		$("#" + (+day)).addClass('dark-red');
-	}
-	$("#" + (+day)).append("<div class='oh clickable " + strikethrough + "'>" + time + cancel + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "/" + feedback + "/" + i_id + "/" + registered + "</div></div>")
+	var red = '';
+	$("#" + (+day)).addClass('dark-red');
+	if (cancel === "") red = ' dark-red';
+	$("#" + (+day)).append("<div class='oh clickable" + strikethrough + red + "'>" + time + cancel + "<div id='info' class='hidden'>" + first_name + " " + last_name + "/" + day + "/" + s_time + "/" + e_time + "/" + location + "/" + feedback + "/" + i_id + "/" + registered + "</div></div>")
 }

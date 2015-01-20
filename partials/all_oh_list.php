@@ -1,157 +1,96 @@
-<div class = "all-oh-list-section">
-	<div class = "all-oh-list-title thin font-size-15">
-		Wed, Jan 23
-	</div>
-	<div class = "box all-oh-list-box">
-		<div class = "all-oh-list-info font-size-14 thin border-box">
-			<ul class = "list-style-none">
-				<li class = "inline-block">
-					Matt Tomlinson
-				</li>
-				<li class = "inline-block">
-					1:30 PM - 2:30 PM
-				</li>
-				<li class = "inline-block small-padding-left border-box">
-					Gates G13
-				</li>
-				<li class = "inline-block">
-					15 Sign-Ups
-				</li>
-			</ul>
-			<img src = "img/confirm_icon_empty.png" class = "all-oh-list-icon icon-empty clickable" />
-		</div>
+<?php
 
-		<div class = "all-oh-list-info font-size-14 thin border-box no-bottom-border">
-			<ul class = "list-style-none">
-				<li class = "inline-block">
-					Kaitlyn Kwan
-				</li>
-				<li class = "inline-block">
-					5:30 PM - 6:30 PM
-				</li>
-				<li class = "inline-block small-padding-left border-box">
-					Gates G15
-				</li>
-				<li class = "inline-block">
-					12 Sign-Ups
-				</li>
-			</ul>
-			<img src = "img/confirm_icon_empty.png" class = "all-oh-list-icon icon-empty clickable" />
-		</div>
-	</div>
-</div>
+	if (!isset($mysqli)) {
+		session_start();
+		include '../require/password.php';
+	    $mysqli = new mysqli($host,$login,$password,$databaseName);
 
-<div class = "all-oh-list-section">
-	<div class = "all-oh-list-title thin font-size-15">
-		Thu, Jan 24
-	</div>
-	<div class = "box all-oh-list-box">
-		<div class = "all-oh-list-info font-size-14 thin border-box clickable">
-			<ul class = "list-style-none">
-				<li class = "inline-block">
-					Jonathan Hayon
-				</li>
-				<li class = "inline-block">
-					5:30 PM - 10:30 PM
-				</li>
-				<li class = "inline-block small-padding-left border-box">
-					Gates G15
-				</li>
-				<li class = "inline-block">
-					500 Sign-Ups
-				</li>
-			</ul>
-			<img src = "img/confirm_icon.png" class = "all-oh-list-icon icon-selected clickable" />
+	    if ($mysqli->connect_error) {
+		    die("Connection failed: " . $mysqli->connect_error);
+		}
+	}
+
+	$sql = "SELECT * FROM OH LEFT JOIN (SELECT * FROM AttendingOH WHERE s_netid = '".$_SESSION['current_user']->netid."' AND status = 0) t1 ON t1.time = OH.start_time AND OH.netid = t1.i_netid INNER JOIN (SELECT DISTINCT(DATE(start_time)) AS dates FROM OH WHERE start_time > NOW() AND end_time > NOW() ORDER BY start_time LIMIT 3) t2 ON DATE(OH.start_time) = t2.dates INNER JOIN Instructors ON Instructors.netid = OH.netid LEFT JOIN (SELECT COUNT(*) AS num_regs, i_netid,time FROM AttendingOH GROUP BY i_netid,time) AS t3 ON OH.netid = t3.i_netid AND OH.start_time = t3.time WHERE start_time > NOW() AND end_time > NOW() ORDER BY start_time LIMIT 15";
+	$result = $mysqli->query($sql);
+	$prev_date = 0;
+
+	while ($row = mysqli_fetch_assoc($result)) {
+		$curr_date = $row['dates'];
+
+		if ($prev_date != $curr_date && $prev_date != 0) {
+			echo "</div></div>";
+		}
+
+		if ($prev_date != $curr_date) {
+			echo '<div class = "all-oh-list-section">
+					<div class = "all-oh-list-title thin font-size-15">
+						'.change_to_date($row['start_time']).'
+					</div>
+					<div class = "box all-oh-list-box">';
+		}
+
+		echo '<div class = "all-oh-list-info font-size-14 thin border-box';
+		
+		if (!is_null($row['s_netid'])) echo ' clickable';
+		if ($prev_date != $curr_date && $prev_date != 0) echo ' no-bottom-border';
+
+		$num_regs = (is_null($row['num_regs'])) ? 0 : $row['num_regs'];
+		
+		echo '"><ul class = "list-style-none">
+					<li class = "inline-block">
+						'.$row['first_name'].' '.$row['last_name'].'
+					</li>
+					<li class = "inline-block">
+						'.change_to_time($row['start_time']).' - '.change_to_time($row['end_time']).'
+					</li>
+					<li class = "inline-block small-padding-left border-box">
+						'.$row['location'].'
+					</li>
+					<li class = "inline-block">
+						'.$num_regs.' Sign Ups
+					</li>
+				</ul>';
+
+		echo '<span class = "hidden all-oh-list-attending-id">'.$row['att_id'].'</span>';
+
+		if (is_null($row['s_netid'])) {
+			echo '<img src = "img/confirm_icon_empty.png" class = "all-oh-list-icon icon-empty clickable all-oh-list-reserve" />';
+		} else {
+			echo '<img src = "img/confirm_icon.png" class = "all-oh-list-icon icon-selected clickable all-oh-list-unreserve" />
 			<div class = "all-oh-list-expanded hidden">
-				<textarea class = "all-oh-list-problem" class = "font-size-14 border-box thin">Description of Problem</textarea>
+				<textarea class = "all-oh-list-problem" class = "font-size-14 border-box thin">'.$row['p_desc'].'</textarea>
 				<select class = "all-oh-list-category">
-					<option value = "">-- Select Category --</option>
-					<option value = "HTML">HTML</option>
-					<option value = "CSS">CSS</option>
-					<option value = "PHP">PHP</option>
-					<option value = "JS">JavaScript</option>
-					<option value = "SQL">SQL</option>
-					<option value = "General">General</option>
+					<option value = "HTML"';
+			if ($row['p_cat'] == "HTML") echo ' selected';
+			echo '>HTML</option>
+					<option value = "CSS"';
+
+			if ($row['p_cat'] == "CSS") echo ' selected';
+			echo '>CSS</option>
+					<option value = "PHP"';
+
+			if ($row['p_cat'] == "PHP") echo ' selected';
+			echo '>PHP</option>
+					<option value = "JS"';
+			
+			if ($row['p_cat'] == "JS") echo ' selected';
+			echo '>JavaScript</option>
+					<option value = "SQL"';
+
+			if ($row['p_cat'] == "SQL") echo ' selected';
+			echo '>SQL</option>
+					<option value = "General"';
+			if ($row['p_cat'] == "GENERAL") echo ' selected';
+			echo '>General</option>
 				</select>
-			</div>
-		</div>
+			</div>';
+		}
+					
+		echo '</div>';
 
-		<div class = "all-oh-list-info font-size-14 thin border-box no-bottom-border">
-			<ul class = "list-style-none">
-				<li class = "inline-block">
-					Kaitlyn Kwan
-				</li>
-				<li class = "inline-block">
-					5:30 PM - 6:30 PM
-				</li>
-				<li class = "inline-block small-padding-left border-box">
-					Gates G15
-				</li>
-				<li class = "inline-block">
-					12 Sign-Ups
-				</li>
-			</ul>
-			<img src = "img/confirm_icon_empty.png" class = "all-oh-list-icon icon-empty clickable" />
-		</div>
-	</div>
-</div>
-
-<div class = "all-oh-list-section">
-	<div class = "all-oh-list-title thin font-size-15">
-		Attended OH
-	</div>
-	<div class = "box all-oh-list-box">
-		<div class = "all-oh-list-info font-size-14 thin border-box clickable">
-			<ul class = "list-style-none">
-				<li class = "inline-block">
-					Matt Tomlinson
-				</li>
-				<li class = "inline-block">
-					Thu, Jan 16
-				</li>
-				<li class = "inline-block small-padding-left border-box">
-					Gates G13
-				</li>
-				<li class = "inline-block">
-					5:30 PM - 6:30 PM
-				</li>
-			</ul>
-			<div class = "all-oh-list-feedback hidden center">
-				<select class = "all-oh-list-feedback-category">
-					<option value = "">-- Select Feedback --</option>
-					<option value = "HTML">HTML</option>
-					<option value = "CSS">CSS</option>
-					<option value = "PHP">PHP</option>
-					<option value = "JS">JavaScript</option>
-					<option value = "SQL">SQL</option>
-					<option value = "General">General</option>
-				</select>
-				<div id = "all-oh-list-feedback-bottom-wrapper">
-					<textarea class = "all-oh-list-feedback-comments" class = "font-size-14 thin border-box">Additional Feedback</textarea>
-					<input type = "submit" value = "Register!" class = "all-oh-list-feedback-submit font-size-14" />
-				</div>
-			</div>
-		</div>
-
-		<div class = "all-oh-list-info font-size-14 thin border-box no-bottom-border">
-			<ul class = "list-style-none">
-				<li class = "inline-block">
-					Kaitlyn Kwan
-				</li>
-				<li class = "inline-block">
-					Thu, Jan 16
-				</li>
-				<li class = "inline-block small-padding-left border-box">
-					Gates G13
-				</li>
-				<li class = "inline-block">
-					5:30 PM - 6:30 PM
-				</li>
-			</ul>
-			<div class = "all-oh-list-feedback hidden">
-			</div>
-		</div>
-	</div>
-</div>
+		if ($prev_date != $curr_date)
+			$prev_date = $curr_date;
+	}
+?>
 
 

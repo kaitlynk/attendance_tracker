@@ -1,8 +1,13 @@
 <?php include 'require/student_header.php'; ?>
 	<div id = "container">
 		<div id = "left-column" class = "column">
-			<?php include 'partials/happening_now.php'; ?>
+			<div id = "happening-now">
+				<?php include 'partials/happening_now.php'; ?>
+			</div>
+			<div id = "happening-now-hidden" class = "hidden">
+			</div>
 		</div>
+		<?php include 'partials/happening_now_bottom.php'; ?>
 		<div id = "right-column" class = "column">
 			<div id = "all-oh-header" class = "font-size-18 left">
 				All Office Hours

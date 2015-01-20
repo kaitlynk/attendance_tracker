@@ -1,5 +1,17 @@
-<?php
+<?php 
+
 	include 'require/date_functions.php';
+	
+	if (is_null($mysqli)) {
+		session_start();
+		include '../require/password.php';
+		include '../require/date_functions.php';
+		$mysqli = new mysqli($host,$login,$password,$databaseName);
+
+	    if (mysqli_connect_error() ){
+	        die("Can't connect to database: " . $mysqli->error);
+	    }
+	}
 
 	$curr_instructors_sql = 'SELECT DISTINCT(OH.netid), start_time, end_time, location, Instructors.first_name, Instructors.last_name FROM OH INNER JOIN Instructors ON OH.netid = Instructors.netid INNER JOIN AttendingOH ON AttendingOH.i_netid = OH.netid WHERE NOW() > OH.start_time AND NOW() < OH.end_time';
 	$curr_instructors_result = $mysqli->query($curr_instructors_sql);
@@ -81,10 +93,3 @@
 	<div id = "happening-now-list" class = "box center">
 		<?php include('happening_now_list.php'); ?>
 	</div>
-	<?php 
-		if ($_SESSION['ins']) {
-			include('next_oh.php');
-		} else {
-			include('student_register.php');
-		}
-	?>

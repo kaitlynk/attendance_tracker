@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
     $(document).on("click", ".oh", function() {
         var arr = $(this).children("#info").first().text().split('/');
         var month_arr = $("#month-name").text().split(' ');
